@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings Home</title>
+       <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+</head>
+<body>
+	Settings Home
+
+<br>
+
+The base controller's IP address:
+<br>
+<textarea id="#IP_ADDRESS"></textarea>
+<br>
+<hr>
+<input type="button" onclick="location.href='/';" value="Home"/>
+<input type="button" onclick="location.href='sensorSetup';" value="Setup up Sensors"/>
+<hr>
+<br>
+
+<script>
+   $( document ).ready(function() {
+		$.ajax({
+            type: 'GET',
+            url: '/settings/ip',
+            success: function(data){
+                console.log(data);
+                document.getElementById("#IP_ADDRESS").innerHTML = data;
+            },
+            error: function(){}
+            }
+        );
+	});
+
+
+
+</script>
+
+</body>
+</html>

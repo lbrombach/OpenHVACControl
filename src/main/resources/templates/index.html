@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <title>This is the home screen page</title>
+
+
+</head>
+<body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<h2>
+    <pre>      System Overview</pre>
+    <hr>
+</h2>
+<div>
+    <div><pre>
+        <h3>        Zone 1  :  <textarea id="#ZONE1ALIAS"></textarea>   Mode:   <textarea id="#ZONE1MODE"></textarea>    Select Mode: <button
+                onClick="setMode(1, 'HEAT');">HEAT</button> <button onClick="setMode(1, 'COOL');">COOL</button> <button
+                onClick="setMode(1, 'OFF');">OFF </button>
+        Temp 1  :  <textarea id="#ZONE1TEMP1"></textarea>   Temp 2: <textarea id="#ZONE1TEMP2"></textarea>    Using temp:  <textarea
+                    id="#ZONE1USINGTEMP"></textarea>
+        Setpoint:  <textarea id="#ZONE1SETPOINT"></textarea>   <button onClick="increaseSP(1);">&nbsp;Up&nbsp;</button> <button
+                    onClick="decreaseSP(1);">Down</button>                      Fan       :  <textarea id="#ZONE1FAN"></textarea> <button onClick="toggleFanOnAuto(1);">&nbsp;Auto/On</button>
+        </h3></pre>
+    </div>
+    <hr>
+
+    <div>
+        <pre>
+        <h3>        Zone 2  :  <textarea id="#ZONE2ALIAS"></textarea>   Mode:   <textarea id="#ZONE2MODE"></textarea>    Select Mode: <button
+                onClick="setMode(2, 'HEAT');">HEAT</button> <button onClick="setMode(2, 'COOL');">COOL</button> <button
+                onClick="setMode(2, 'OFF');">OFF </button>
+        Temp 1  :  <textarea id="#ZONE2TEMP1"></textarea>   Temp 2: <textarea id="#ZONE2TEMP2"></textarea>    Using temp:  <textarea
+                    id="#ZONE2USINGTEMP"></textarea>
+        Setpoint:  <textarea id="#ZONE2SETPOINT"></textarea>   <button onClick="increaseSP(2);">&nbsp;Up&nbsp;</button> <button
+                    onClick="decreaseSP(2);">Down</button>                      Fan       :  <textarea id="#ZONE2FAN"></textarea> <button onClick="toggleFanOnAuto(2);">&nbsp;Auto/On</button>
+        </h3></pre>
+    </div>
+    <hr>
+
+    <div>
+        <pre>
+        <h3>        Zone 3  :  <textarea id="#ZONE3ALIAS"></textarea>   Mode:   <textarea id="#ZONE3MODE"></textarea>   Select Mode: <button
+                onClick="setMode(3, 'HEAT');">HEAT</button> <button onClick="setMode(3, 'COOL');">COOL</button> <button
+                onClick="setMode(3, 'OFF');">OFF </button>
+        Temp 1  :  <textarea id="#ZONE3TEMP1"></textarea>   Temp 2: <textarea id="#ZONE3TEMP2"></textarea>   Using temp:  <textarea
+                    id="#ZONE3USINGTEMP"></textarea>
+        Setpoint:  <textarea id="#ZONE3SETPOINT"></textarea>   <button onClick="increaseSP(3);">&nbsp;Up&nbsp;</button> <button
+                    onClick="decreaseSP(3);">Down</button>                     Fan       :  <textarea id="#ZONE3FAN"></textarea> <button onClick="toggleFanOnAuto(3);">&nbsp;Auto/On</button>
+        </h3></pre>
+    </div>
+    <hr>
+
+    <div>
+        <pre>
+        <h3>
+        System Outputs:
+
+        HEATING:  stage 1: <textarea id="#W1_OUTPUT"></textarea>  stage 2: <textarea id="#W2_OUTPUT"></textarea>
+        <br>
+        COOLING:  stage 1: <textarea id="#Y1_OUTPUT"></textarea>  stage 2: <textarea id="#Y2_OUTPUT"></textarea>
+        <br>
+        FAN    :           <textarea id="#G_OUTPUT"></textarea>
+        <br>
+        DAMPERS:   zone 1: <textarea id="#DAMPERZ1_OUTPUT"></textarea>   zone 2: <textarea
+                id="#DAMPERZ2_OUTPUT"></textarea>   zone 3: <textarea id="#DAMPERZ3_OUTPUT"></textarea>
+        </h3>
+        </pre>
+    </div>
+    <hr>
+    <pre>         <input type="button" onclick="location.href='settings';" value="Settings"/></pre>
+    <hr>
+    <br>
+
+    <br>
+    <div>
+        <br>
+        Enter new name for task1
+        <br>
+        <input type="text" id="TASK1NEW_NAME"/>
+        <br>
+        <button onClick="submitTask1Name();">Submit</button>
+    </div>
+
+
+
+    <!--Why this not do anything?-->
+    <button class="ui blue button" id="sensorSetupNavButton" style="display: none;"
+            onclick="location.href='/sensorSetup'">Setup up Sensors
+    </button>
+
+</div>
+
+<script type="text/javascript">
+
+        //this is what works in postman: to delete users from DB:
+        //localhost:8080/user?emailAddress=example@wayne.edu
+
+    function submitTask1Name(input){
+            let newName = document.getElementById("TASK1NEW_NAME").value;
+          //  let queryString = '/setTask1Name?newName=' + newName;
+            let queryString = '/setTask1Name/' + newName;
+            console.log(queryString);
+            $.ajax({
+            type: 'PUT',
+            url: queryString,
+            success: function(){
+                console.log("Post completed");
+            },
+            error: function(){alert("Error Failed To Post new Data");}
+            }
+        );
+    }
+    
+    function showAliases(data){
+        document.getElementById("#ZONE1ALIAS").innerHTML = data[0];
+        document.getElementById("#ZONE2ALIAS").innerHTML = data[1];
+        document.getElementById("#ZONE3ALIAS").innerHTML = data[2];
+    }
+    
+    function showModes(data){
+        document.getElementById("#ZONE1MODE").innerHTML = data[0];
+        document.getElementById("#ZONE2MODE").innerHTML = data[1];
+        document.getElementById("#ZONE3MODE").innerHTML = data[2];
+    }
+
+    function showFans(data){
+        document.getElementById("#ZONE1FAN").innerHTML = (data[0] == true) ? "ON":"AUTO"; 
+        document.getElementById("#ZONE2FAN").innerHTML = (data[1] == true) ? "ON":"AUTO"; 
+        document.getElementById("#ZONE3FAN").innerHTML = (data[2] == true) ? "ON":"AUTO"; 
+    }
+
+
+
+    function showTemps(data){
+        document.getElementById("#ZONE1TEMP1").innerHTML = (data[0] == -999) ? " -- ":data[0]; 
+        document.getElementById("#ZONE2TEMP1").innerHTML = (data[1] == -999) ? " -- ":data[1]; 
+        document.getElementById("#ZONE3TEMP1").innerHTML = (data[2] == -999) ? " -- ":data[2]; 
+        document.getElementById("#ZONE1TEMP2").innerHTML = (data[3] == -999) ? " -- ":data[3]; 
+        document.getElementById("#ZONE2TEMP2").innerHTML = (data[4] == -999) ? " -- ":data[4]; 
+        document.getElementById("#ZONE3TEMP2").innerHTML = (data[5] == -999) ? " -- ":data[5]; 
+        document.getElementById("#ZONE1USINGTEMP").innerHTML = data[6];
+        document.getElementById("#ZONE2USINGTEMP").innerHTML = data[7];
+        document.getElementById("#ZONE3USINGTEMP").innerHTML = data[8];
+    }
+
+    function showSetpoints(data){
+    document.getElementById("#ZONE1SETPOINT").innerHTML = data[0];
+    document.getElementById("#ZONE2SETPOINT").innerHTML = data[1];
+    document.getElementById("#ZONE3SETPOINT").innerHTML = data[2];
+    //document.getElementById("#ZONE1TEMP2").innerHTML = data[3];
+    //document.getElementById("#ZONE2TEMP2").innerHTML = data[4];
+    //document.getElementById("#ZONE3TEMP2").innerHTML = data[5];
+    }
+
+    function getOnOff(boolData){
+        return (boolData ? 'On' : 'Off');
+    }
+
+    function getOpenClosed(boolData){
+        return (boolData ? 'Open' : 'Closed');
+    }
+
+    function showOutputs(data){
+    document.getElementById("#W1_OUTPUT").innerHTML = getOnOff(data[0]);
+    document.getElementById("#W2_OUTPUT").innerHTML = getOnOff(data[1]);
+    document.getElementById("#Y1_OUTPUT").innerHTML = getOnOff(data[2]);
+    document.getElementById("#Y2_OUTPUT").innerHTML = getOnOff(data[3]);
+    document.getElementById("#G_OUTPUT").innerHTML  = getOnOff(data[4]);
+
+    document.getElementById("#DAMPERZ1_OUTPUT").innerHTML = getOpenClosed(data[5]);
+    document.getElementById("#DAMPERZ2_OUTPUT").innerHTML = getOpenClosed(data[6]);
+    document.getElementById("#DAMPERZ3_OUTPUT").innerHTML = getOpenClosed(data[7]);
+    }
+
+    function updateSetpoint(zoneNum, data){
+        if(zoneNum == 1){
+            document.getElementById("#ZONE1SETPOINT").innerHTML = data;
+        }
+        else if (zoneNum == 2){
+            document.getElementById("#ZONE2SETPOINT").innerHTML = data;
+        }
+        else if (zoneNum == 3){
+            document.getElementById("#ZONE3SETPOINT").innerHTML = data;
+        }
+    }
+
+
+
+    var update_loop = setInterval(Update, 2000);
+
+
+    function Update(){
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/temps',
+            success: function(data){
+                showTemps(data);
+            },
+            error: function(){alert("Error Failed To Retrieve Temperature Data");}
+            }
+        );
+
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/setpoints',
+            success: function(data){
+                showSetpoints(data);
+            },
+            error: function(){alert("Error Failed To Retrieve Setpoint Data");}
+            }
+        );
+
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/outputs',
+            success: function(data){
+                showOutputs(data);
+            },
+            error: function(){
+               console.log("Error Failed To Retrieve Outputs Data");
+            }
+            }
+        );
+
+            $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/zonedata/aliases',
+            success: function(data){
+                showAliases(data);
+            },
+            error: function(){
+                console.log("Error Failed To Retrieve Alias Data");
+            }
+            }
+        );
+        
+        getModes();
+        getFanSettings();
+    }
+
+    function getModes(){
+            $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/zonedata/modes',
+            success: function(data){
+                showModes(data);
+            },
+            error: function(){
+                console.log("Error Failed To Retrieve Mode Data");
+            }
+            }
+        );
+    }
+
+        function getFanSettings(){
+            $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/zonedata/fans',
+            success: function(data){
+                showFans(data);
+            },
+            error: function(){
+                console.log("Error Failed To Retrieve Fan Data");
+            }
+            }
+        );
+    }
+
+    function setMode(zoneNum, newMode){
+            console.log("zone " + zoneNum + " to " + newMode);
+            let queryString = '/zonedata/modes/' + zoneNum + '/' + newMode;
+            console.log(queryString);
+            $.ajax({
+            type: 'PUT',
+            url: queryString,
+            success: function(){
+                console.log("Mode " + zoneNum + " changed to " + newMode);
+                getModes();
+            },
+            error: function(){alert("Error failed to change mode");}
+            }
+        );
+    }
+
+    function toggleFanOnAuto(zoneNum){
+            let queryString = '/zonedata/fans/' + zoneNum;
+            $.ajax({
+            type: 'PUT',
+            url: queryString,
+            success: function(){
+                getFanSettings();
+            },
+            error: function(){alert("Error failed to change fan setting");}
+            }
+        );
+    }
+
+    function increaseSP(zoneNum){
+            let queryString = '/setpoints/increase/' + zoneNum;
+            console.log
+            $.ajax({           
+            type: 'PUT',
+            url: queryString,
+            success: function(data){
+                console.log("Setpoint " + zoneNum + " increased");
+                updateSetpoint(zoneNum, data);
+            },
+            error: function(){alert("Error failed to change setpoint");}
+            }
+        );
+    }
+
+    function decreaseSP(zoneNum){
+            let queryString = '/setpoints/decrease/' + zoneNum;
+            $.ajax({
+            type: 'PUT',
+            url: queryString,
+            success: function(data){
+                console.log("Setpoint " + zoneNum + " decreased");
+                updateSetpoint(zoneNum, data);
+            },
+            error: function(){alert("Error failed to change setpoint");}
+            }
+        );
+    }
+
+
+
+
+
+</script>
+</body>
+</html>
+
+</title>
+</head>
+<body>
+
+</body>
+</html>
