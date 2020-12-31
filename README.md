@@ -5,7 +5,7 @@
 A Raspberry Pi based multi-stage, multi-zone HVAC controller. Replace thermostats and control damper motors for up to
 two stages heat, two stages cooling, and three zones. User interface is currently via web browser (HTML pages and a
 RESTful interface with the back end), but an accompanying Android App is on the todo list.
-<img src="/images/overview.png" alt="System Overview"/>
+<img src="/images/overview.png" alt="System Overview" width="400" height="400" />
 
 ## Purpose/Motivation:
 
@@ -14,7 +14,7 @@ equipent that can only be "on" or "off." This saves on energy and can contribute
 increased comfort and reduced energy consumption. "Multi-zone" means different areas of the home or building have their
 own thermostat, and motorized dampers in ductwork open and close to control the flow of air to the different zones.
 (hydronic systems user either motorized valves or control different pumps for different zones).
-<img src="/images/zonedSystem.jpeg" alt="Zone System"/>
+<img src="/images/zonedSystem.jpeg" alt="Zone System" width="400" height="360"/>
 
 Commercially available equipment controllers for these systems are available, but very expensive - especially if the
 requirement is for both multi-stage AND multi-zone control. The purpose of this project is to reduce the initial expense
@@ -24,17 +24,22 @@ crude C++ program with no real interface/information available aside from counti
 2 is written in Java and uses a REST api to allow for graphical user interface on any device with a web browser.
 
 ## Functionalities/features:
-<img src="/images/zone.png" alt="Zone control image"/>
-<img src="/images/outputs.png" alt="Outputs display"/>
+
 - Control up to 3 zones. For each zone:
     - Control 2 stages heating - Control 2 stages cooling
     - Up to two temperature sensors
     - in case of primary sensor failure, system will check secondary sensor
+  
+    <img src="/images/zone.png" alt="Zone control image"/>
+  
 - Graphical User Interface
     - Control from any device on network with web browser
     - Home (System overview) page allows for control of all zones
     - as well as indicates the system outputs so user can
       tell at a glance what stages are on and what zone dampers are open or closed.
+
+    <img src="/images/outputs.png" alt="Outputs display"/>
+
 - Emergency operation mode. In event of controller or relay module failure, user can use toggle switches to open zones
   manually and operate as a single-zone system using an off-the-shelf thermostat.
   
