@@ -5,7 +5,6 @@
 A Raspberry Pi based multi-stage, multi-zone HVAC controller. Replace thermostats and control damper motors for up to
 two stages heat, two stages cooling, and three zones. User interface is currently via web browser (HTML pages and a
 RESTful interface with the back end), but an accompanying Android App is on the todo list.
-<img src="/images/overview.png" alt="System Overview" width="400" height="400" />
 
 ## Purpose/Motivation:
 
@@ -30,7 +29,7 @@ crude C++ program with no real interface/information available aside from counti
     - Up to two temperature sensors
     - in case of primary sensor failure, system will check secondary sensor
   
-    <img src="/images/zone.png" alt="Zone control image"/>
+    <img src="/images/zone.png" alt="Zone control image" width="600"/>
   
 - Graphical User Interface
     - Control from any device on network with web browser
@@ -38,7 +37,7 @@ crude C++ program with no real interface/information available aside from counti
     - as well as indicates the system outputs so user can
       tell at a glance what stages are on and what zone dampers are open or closed.
 
-    <img src="/images/outputs.png" alt="Outputs display"/>
+    <img src="/images/outputs.png" alt="Outputs display" width="600"/>
 
 - Emergency operation mode. In event of controller or relay module failure, user can use toggle switches to open zones
   manually and operate as a single-zone system using an off-the-shelf thermostat.
