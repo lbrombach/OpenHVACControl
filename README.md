@@ -4,7 +4,10 @@
 
 A Raspberry Pi based multi-stage, multi-zone HVAC controller. Replace thermostats and control damper motors for up to
 two stages heat, two stages cooling, and three zones. User interface is currently via web browser (HTML pages and a
-RESTful interface with the back end), but an accompanying Android App is on the todo list.
+RESTful interface with the back end), but an accompanying Android App is on the todo list. While the system was designed
+around a forced air zoned system, it should work fine for zoned hydronic systems by simply using the relays to control
+zone valves or pumps instead of the zone dampers. It will work as well for single stage, single zone systems if you
+simply play and learn instead of using an off-the-shelf thermostat.
 
 ## Purpose/Motivation:
 
@@ -25,24 +28,20 @@ crude C++ program with no real interface/information available aside from counti
 ## Functionalities/features:
 
 - Control up to 3 zones. For each zone:
+  <img src="/images/zone.png" alt="Zone control image" width="600"/>
     - Control 2 stages heating - Control 2 stages cooling
-    - Up to two temperature sensors
+    - Up to two temperature sensors (these replace having a thermostat for each zone)
     - in case of primary sensor failure, system will check secondary sensor
-  
-    <img src="/images/zone.png" alt="Zone control image" width="600"/>
-  
+
 - Graphical User Interface
     - Control from any device on network with web browser
     - Home (System overview) page allows for control of all zones
-    - as well as indicates the system outputs so user can
-      tell at a glance what stages are on and what zone dampers are open or closed.
+    - System output display so user can tell at a glance what stages are on and what zone dampers are open or closed.
 
     <img src="/images/outputs.png" alt="Outputs display" width="600"/>
 
 - Emergency operation mode. In event of controller or relay module failure, user can use toggle switches to open zones
   manually and operate as a single-zone system using an off-the-shelf thermostat.
-  
-  
 
 ### To do:
 
@@ -61,22 +60,25 @@ mostly a wrapper for the WiringPi C++ Raspberry Pi GPIO library (http://wiringpi
 Daniel Sendula for their PI4J work and saving me a ton of work developing my own, and Gordon for his Wiring Pi library
 and support when I was first learning to use a Raspberry Pi.
 
+DS18B20 (one wire protocol) temperature sensors were chosen for the ability to add as many as needed to a single gpio
+pin and single, long wire run.
+
 ## Special Obstacles and Learning Experiences
 
 As a controls engineer and historically back-end programmer, the control system was pretty straightforward, but this
 project was as much about getting more familiar with Spring Boot MVC and writing REST APIs as it was about simply
 rolling out a new version.
 
-My front end is very plain as my goal was to learn enough HTML and Javascript to simply get it done. At this I have
-succeeded, although now that I understand a bit more about them refactoring is in order before I add the new interface
-feature pages. Additionally, my only previous experience with a RESTful API project used MYSQL and I had to figure out
-how to handle passing data back and forth without calling the database. I think that could certainly be better, and some
-refactoring is needed there as well.
+My front end is very plain as my goal was to learn enough HTML and Javascript to simply get it done while spending more
+time learning Spring Boot, MVC, and REST APIs. At this I have succeeded, although now that I understand a bit more about
+HTML and Javascfipt, some refactoring is in order before I add the new interface feature pages. Additionally, my only
+previous experience with a RESTful API project used MYSQL and I had to figure out how to handle passing data back and
+forth without calling the database. I think that could certainly be better, and some refactoring is needed there as
+well.
 
 ## Installation/usage:
 
 Please see the wiki for wiring diagrams, photos, setup, and operating instructions.
-
 
 ## Contributing, bug reports, etc:
 
