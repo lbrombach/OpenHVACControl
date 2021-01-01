@@ -1,5 +1,5 @@
 @startuml
-class org.KiplingHeat.ControllerService.TempsControllerService {
+class org.OpenHVACControl.ControllerService.TempsControllerService {
 - {static} int zone1PrimaryTemp
 - {static} int zone2PrimaryTemp
 - {static} int zone3PrimaryTemp
@@ -12,13 +12,13 @@ class org.KiplingHeat.ControllerService.TempsControllerService {
 + {static} void setTemps(List<Zone>)
 + {static} List<Integer> getTemps()
 }
-class org.KiplingHeat.HTMLControllers.TempsController {
+class org.OpenHVACControl.HTMLControllers.TempsController {
 + List<Integer> getTemps()
 }
-class org.KiplingHeat.hardware.GPIOControl {
+class org.OpenHVACControl.hardware.GPIOControl {
 + GpioController gpio
 }
-class org.KiplingHeat.MainController {
+class org.OpenHVACControl.MainController {
 - {static} Pin ZONE_1_DAMPER_PIN
 - {static} Pin ZONE_2_DAMPER_PIN
 - {static} Pin ZONE_3_DAMPER_PIN
@@ -32,7 +32,7 @@ class org.KiplingHeat.MainController {
 - List<Zone> zones
 + void mainController()
 }
-class org.KiplingHeat.MainControllerUtils {
+class org.OpenHVACControl.MainControllerUtils {
 + {static} List<Zone> getZonesRequestingHeat(List<Zone>)
 + {static} List<Request> getAllRequests(List<Zone>)
 + {static} Request totalRequests(List<Request>)
@@ -43,14 +43,14 @@ class org.KiplingHeat.MainControllerUtils {
 + {static} List<Zone> initializeZones(Pin,Pin,Pin,GPIOControl)
 + {static} boolean validateZones(List<Zone>)
 }
-class org.KiplingHeat.HTMLControllers.ZoneDataController {
+class org.OpenHVACControl.HTMLControllers.ZoneDataController {
 + List<String> getAliases()
 + List<String> getModes()
 + List<Boolean> getFansRequested()
 + void setMode(String,String)
 + void setFanRequested(String)
 }
-class org.KiplingHeat.hardware.CallsToSystem {
+class org.OpenHVACControl.hardware.CallsToSystem {
 - {static} int DAMPER_CLOSE_DELAY
 - {static} Relay W1
 - {static} Relay W2
@@ -71,19 +71,19 @@ class org.KiplingHeat.hardware.CallsToSystem {
 + {static} void turnOffStage2Cool()
 + {static} void startFanOnly(List<Zone>)
 }
-class org.KiplingHeat.HTMLControllers.SetpointsController {
+class org.OpenHVACControl.HTMLControllers.SetpointsController {
 + List<Integer> getSetpoints()
 + int increaseSP(String)
 + int decreaseSP(String)
 }
-class org.KiplingHeat.Sensors.InactiveZoneException {
+class org.OpenHVACControl.Sensors.InactiveZoneException {
 }
-class org.KiplingHeat.HTMLControllers.WebPageController {
+class org.OpenHVACControl.HTMLControllers.WebPageController {
 + String getIndex()
 + String getSettings()
 + String getSensorsSetup()
 }
-class org.KiplingHeat.Zones.Request {
+class org.OpenHVACControl.Zones.Request {
 - int heatingStages
 - int coolingStages
 - boolean fanRequest
@@ -98,7 +98,7 @@ class org.KiplingHeat.Zones.Request {
 + void setTimeStateStarted(long)
 + String toString()
 }
-class org.KiplingHeat.Zones.ZoneUtils {
+class org.OpenHVACControl.Zones.ZoneUtils {
 ~ {static} void getSensorData(TempSensor,TempSensor,HashMap<Zone.Temps,Integer>,boolean)
 ~ {static} void updateSetpoints(String,HashMap<Zone.Temps,Integer>)
 ~ {static} int getProcessSetpoint(Zone.Mode,HashMap<Zone.Temps,Integer>,boolean)
@@ -106,7 +106,7 @@ class org.KiplingHeat.Zones.ZoneUtils {
 ~ {static} int getHeatingStages(HashMap<Zone.Temps,Integer>,int,long,int)
 ~ {static} int minutesElapsed(long)
 }
-class org.KiplingHeat.ControllerService.OutputsControllerService {
+class org.OpenHVACControl.ControllerService.OutputsControllerService {
 - {static} boolean W1
 - {static} boolean W2
 - {static} boolean Y1
@@ -118,9 +118,9 @@ class org.KiplingHeat.ControllerService.OutputsControllerService {
 + {static} List<Boolean> getOutputs()
 + {static} void setOutputs(List<Boolean>,List<Zone>)
 }
-class org.KiplingHeat.Sensors.InactiveSensorException {
+class org.OpenHVACControl.Sensors.InactiveSensorException {
 }
-class org.KiplingHeat.hardware.Damper {
+class org.OpenHVACControl.hardware.Damper {
 - Pin pin
 - Relay relay
 + void setPinNumber(Pin)
@@ -128,7 +128,7 @@ class org.KiplingHeat.hardware.Damper {
 + void open()
 + void close()
 }
-class org.KiplingHeat.ControllerService.SetpointsControllerService {
+class org.OpenHVACControl.ControllerService.SetpointsControllerService {
 - {static} int zone1OccupiedSP
 - {static} int zone2OccupiedSP
 - {static} int zone3OccupiedSP
@@ -139,10 +139,10 @@ class org.KiplingHeat.ControllerService.SetpointsControllerService {
 + {static} Integer increaseSP(int)
 + {static} Integer decreaseSP(int)
 }
-class org.KiplingHeat.HTMLControllers.OutputsController {
+class org.OpenHVACControl.HTMLControllers.OutputsController {
 + List<Boolean> getOutputs()
 }
-class org.KiplingHeat.Sensors.TempSensor {
+class org.OpenHVACControl.Sensors.TempSensor {
 - long lastReadTime
 - int lastTempRead
 - TempSensor newSetupConfig
@@ -150,7 +150,7 @@ class org.KiplingHeat.Sensors.TempSensor {
 # void applyNewConfig(AbstractSensor)
 + String toString()
 }
-abstract class org.KiplingHeat.Sensors.AbstractSensor {
+abstract class org.OpenHVACControl.Sensors.AbstractSensor {
 ~ {static} String filePath
 # String name
 # String alias
@@ -168,7 +168,7 @@ abstract class org.KiplingHeat.Sensors.AbstractSensor {
 + void setSensorOffset(int)
 + String toString()
 }
-class org.KiplingHeat.hardware.Relay {
+class org.OpenHVACControl.hardware.Relay {
 - Pin pin
 ~ GPIOControl gpio
 ~ GpioPinDigitalOutput outputPin
@@ -177,13 +177,13 @@ class org.KiplingHeat.hardware.Relay {
 + void setRelayOff()
 + boolean getState()
 }
-class org.KiplingHeat.HTMLControllers.SettingsController {
+class org.OpenHVACControl.HTMLControllers.SettingsController {
 + String getIP()
 }
-class org.KiplingHeat.Main {
+class org.OpenHVACControl.Main {
 + {static} void main(String[])
 }
-class org.KiplingHeat.Zones.Zone {
+class org.OpenHVACControl.Zones.Zone {
 ~ {static} String filePath
 - {static} Pin ZONE_1_DAMPER_PIN
 - {static} Pin ZONE_2_DAMPER_PIN
@@ -244,7 +244,7 @@ class org.KiplingHeat.Zones.Zone {
 + int coolStagesRequested()
 + String toString()
 }
-class org.KiplingHeat.ControllerService.ZoneDataControllerService {
+class org.OpenHVACControl.ControllerService.ZoneDataControllerService {
 ~ {static} List<String> aliases
 ~ {static} List<String> modes
 ~ {static} List<Boolean> fansRequested
@@ -257,8 +257,8 @@ class org.KiplingHeat.ControllerService.ZoneDataControllerService {
 }
 
 
-org.KiplingHeat.Sensors.Exception <|-- org.KiplingHeat.Sensors.InactiveZoneException
-org.KiplingHeat.Sensors.Exception <|-- org.KiplingHeat.Sensors.InactiveSensorException
-org.KiplingHeat.hardware.Thread <|-- org.KiplingHeat.hardware.Damper
-org.KiplingHeat.Sensors.AbstractSensor <|-- org.KiplingHeat.Sensors.TempSensor
+org.OpenHVACControl.Sensors.Exception <|-- org.OpenHVACControl.Sensors.InactiveZoneException
+org.OpenHVACControl.Sensors.Exception <|-- org.OpenHVACControl.Sensors.InactiveSensorException
+org.OpenHVACControl.hardware.Thread <|-- org.OpenHVACControl.hardware.Damper
+org.OpenHVACControl.Sensors.AbstractSensor <|-- org.OpenHVACControl.Sensors.TempSensor
 @enduml
