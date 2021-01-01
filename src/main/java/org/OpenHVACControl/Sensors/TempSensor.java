@@ -23,7 +23,7 @@ public class TempSensor extends AbstractSensor {
             String data = String.valueOf(new Scanner(new File(devicePath)).useDelimiter("\\Z").next());
             String subStrings[] = data.split("t="); //temp data comes after "t="
             temp = Float.valueOf(subStrings[subStrings.length - 1]); //temp data is last item in file string
-            temp = temp / 1000.0f * 1.8f + 32.0f + sensorOffset;  //temp data comes as millidegrees celsius
+            temp = temp / 1000.0f * 1.8f + 32.0f + sensorOffset;  //temp data comes as millidegrees celsius. Convert to F and apply offset
             lastTempRead = (int) temp;
             lastReadTime = System.currentTimeMillis();
 //            System.out.println("TEMP READ = " + temp + " deg F");

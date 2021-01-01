@@ -28,7 +28,7 @@ crude C++ program with no real interface/information available aside from counti
 ## Functionalities/features:
 
 - Control up to 3 zones. For each zone:
-  <img src="/images/zone.png" alt="Zone control image" width="600"/>
+  <img src="/images/screenshots/zone.png" alt="Zone control image" width="600"/>
     - Control 2 stages heating - Control 2 stages cooling
     - Up to two temperature sensors (these replace having a thermostat for each zone)
     - in case of primary sensor failure, system will check secondary sensor
@@ -38,7 +38,7 @@ crude C++ program with no real interface/information available aside from counti
     - Home (System overview) page allows for control of all zones
     - System output display so user can tell at a glance what stages are on and what zone dampers are open or closed.
 
-    <img src="/images/outputs.png" alt="Outputs display" width="600"/>
+    <img src="/images/screenshots/outputs.png" alt="Outputs display" width="600"/>
 
 - Emergency operation mode. In event of controller or relay module failure, user can use toggle switches to open zones
   manually and operate as a single-zone system using an off-the-shelf thermostat.
@@ -79,6 +79,97 @@ well.
 ## Installation/usage:
 
 Please see the wiki for wiring diagrams, photos, setup, and operating instructions.
+
+(Temp putting stuff here until I make public to enable the wiki)
+
+1. Build and wire your system
+
+   1.1 You can use the operating system of your choice, but I used the latest Raspberry Pi OS you can find
+   here: https://www.raspberrypi.org/software/
+   1.2 set that up as usual, but make sure to use the config program (`sudo raspi-config` from a terminal) make sure you
+   select autologin and autoboot to the Desktop GUI. Under interfaces, make sure you enable at least ssh and one-wire.
+
+2. Follow the tutorial here https://pimylifeup.com/raspberry-pi-temperature-sensor/ to learn DS18B20 sensor basics. At
+   the least you need to add the dtoverlay to config.txt and get the address numbers for your sensors. Mark them well
+   and don't mix them up. Future features of this project will make manually tracking which sensor is which unnecessary
+   but you'll still need to add the dtoverlay.
+
+3. Open a terminal on your Rasberry Pi and (preferably from your home directory) clone this repository, cd to the
+   OpenHVACControl directory, and build the project with maven:
+   `git clone https://github.com/lbrombach/OpenHVACControl.git`
+   `cd OpenHVACControl`
+   `mvn clean package`
+   This hopefully results in a successful build like the one shown in the image below.
+   <img src="/images/screenshots/buildsuccess.png" alt="buildsuccess.png" width="500"/>
+
+4. The image above shows the executable file you just built, and you can run it with the java -jar command. In my case,
+   I execute the file with:
+   `java -jar /home/pi/OpenHVACControl/target/OpenHVACControl-1.0-SNAPSHOT.jar`
+   **Note: the file must be run with the command prompt in the OpenHVACControl directory (the root folder that you just
+   cloned) in order for it to find setup and configuration files.
+
+5. Until I have a chance to add zone config and sensor setup pages on the web portal/interface, we have to edit JSON
+   files that can be found in OpenHVACControl/src/main/resources.
+
+   5.1 In zones.json, you'll find some default/startup setpoints and such like these:
+   (mostly you should only need to change the alias, but there are some other options if desired)
+
+    - "name": "zone3"              ## ***DO NOT CHANGE ZONE NAME***
+    - "alias": "Basement"          ## okay to change
+    - "mode": "HEAT"               ## must be "HEAT" or "COOL" or "OFF"
+    - "SECOND_STAGE_DIFF": 3 ## second stage comes on if temp is this many degrees F away from setpoint. Recommend 2 or
+      3 - use whole numbers only ( once triggered, second stage does not turn off until first stage turns off)
+    - "FIRST_STAGE_DIFF": 2 ## first stage comes on if temperature is this many degrees F away from setpoint. recommend
+      1 or 2 - use whole number only.
+    - "PROCESS_SP": 70 ## doesn't matter, system should update this on the fly
+    - "PROCESS_TEMP": 74 ## doesn't matter, system should update this on the fly
+    - "OCCUPIED_SP_HEAT": 70 ## This is the initial setpoint for heating mode (until user changes on interface)
+    - "OCCUPIED_SP_COOL": 70 ## This is the initial setpoint for cooling mode (until user changes on interface)
+    - "UNOCCUPIED_SP_HEAT": 70 ## this is not yet in use - reserved for adding occupied/away modes and scheduling in the
+      future
+    - "UNOCCUPIED_SP_COOL": 70 ## this is not yet in use - reserved for adding occupied/away modes and scheduling in the
+      future
+    - "secondaryIsPrimaryTime": 30 ## for a future feature that enables user to temporarily switch which sensor the zone
+      uses for the process temp (main control temp). Minutes - whole numbers only
+    - "secondStageTimeDelay": 10 ## the zone will call for a second stage if setpoint is not reached in this time.
+      Minutes - whole numbers only
+    - "isOccupied": true ## this is not yet in use - reserved for adding occupied/away modes and scheduling in the
+      future
+    - "isActive": true ## true of false. For disabling a zone if not needed or in case of sensor failure. Not fully
+      implemented.
+    - "usingSecondarySensor": false ##this may go away. Not in use yet.
+
+   5.2 in tempSensors.json, there are less things to change but you are more likely to want to add or remove sensors. It
+   is critical to keep the json format and note change the names. If you add sensors, just add an entry but they must be
+   named with the same pattern you see (zoneName+"Primary" OR zoneName+"Secondary"). Addresses must be unique as
+   discussed earlier.
+   "name": "zone1Primary" ## ***DO NOT CHANGE NAME***
+   "alias": "Main Floor", ## okay to change
+   "address": "28-0316a3167aff" ##see section above for how to find sensor addresses. At least until I automate this.
+   "sensorOffset": 0, ## This is for calibration. If you notice a sensor always reads 2 degrees high, you want to apply
+   an offset of -2 here.
+   "lastTempRead": 0 ## not in use yet. This may go away.
+
+6. Recommend running a simple script at startup. The contents of my startup script are shown below.
+   <img src="/images/startscript.png" alt="startscript.png" width="500"/>
+
+7. With the system configured and started, you can point a web browser on that machine to localhost:8080 for the system
+   overview and control page. Here you can change setpoints, modes, and see temperature sensor data as if you were at a
+   thermostat for all zones at once. At the bottom, you can also see the system outputs. Below system outputs is a
+   button to take you to the future settings page where you'll be able to make changes without messing with the json
+   files directly. Currently, this has a little window that should display the controllers IP address if you have it
+   connected to a network. This is how the system was designed to be used - a monitor at this controller is totally
+   optional (but recommended) and in place of conventional thermostats, a pi zero with a small touchscreen or a cheap
+   tablet pc set up with the web browser pointed to this ip address. Don't forget to add port 8080 (I navigate to
+   192.168.1.38:8080, for example).
+   <img src="/images/screenshots/ipaddress.png" alt="ipaddress.png"/>
+   
+   7.1 This works from any device with a browser that is connected to the same network. It
+   will not work from outside your network and I do not recommend opening your ports to the outside world because I have
+   taken zero security measures in this project. Keep in mind that anyone on the same network can access these pages
+   without any login, so if there is anyone using the network that you don't want messing with your system, you might
+   want to get set up a dedicated router for this system (The cheapest wireless router will do). The only security this system provides at this time is you
+   controlling access to the network it's connected to.
 
 ## Contributing, bug reports, etc:
 
