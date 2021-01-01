@@ -15,7 +15,7 @@ simply play and learn instead of using an off-the-shelf thermostat.
 equipent that can only be "on" or "off." This saves on energy and can contribute to better humidity control for
 increased comfort and reduced energy consumption. "Multi-zone" means different areas of the home or building have their
 own thermostat, and motorized dampers in ductwork open and close to control the flow of air to the different zones.
-(hydronic systems user either motorized valves or control different pumps for different zones).
+(hydronic systems user either motorized valves or control different pumps for different zones).  
 <img src="/images/zonedSystem.jpeg" alt="Zone System" width="400" height="360"/>
 
 Commercially available equipment controllers for these systems are available, but very expensive - especially if the
@@ -27,8 +27,8 @@ crude C++ program with no real interface/information available aside from counti
 
 ## Functionalities/features:
 
-- Control up to 3 zones. For each zone:
-  <img src="/images/screenshots/zone.png" alt="Zone control image" width="600"/>
+- Control up to 3 zones. For each zone:  
+    - <img src="/images/screenshots/zone.png" alt="Zone control image" width="600"/>
     - Control 2 stages heating - Control 2 stages cooling
     - Up to two temperature sensors (these replace having a thermostat for each zone)
     - in case of primary sensor failure, system will check secondary sensor
@@ -38,7 +38,7 @@ crude C++ program with no real interface/information available aside from counti
     - Home (System overview) page allows for control of all zones
     - System output display so user can tell at a glance what stages are on and what zone dampers are open or closed.
 
-    <img src="/images/screenshots/outputs.png" alt="Outputs display" width="600"/>
+    - <img src="/images/screenshots/outputs.png" alt="Outputs display" width="600"/>
 
 - Emergency operation mode. In event of controller or relay module failure, user can use toggle switches to open zones
   manually and operate as a single-zone system using an off-the-shelf thermostat.
@@ -80,7 +80,7 @@ well.
 
 Please see the wiki for wiring diagrams, photos, setup, and operating instructions.
 
-(Temp putting stuff here until I make public to enable the wiki)
+(Temporarily putting stuff here until I make public to enable the wiki)
 
 1. Build and wire your system
 
@@ -95,15 +95,15 @@ Please see the wiki for wiring diagrams, photos, setup, and operating instructio
    but you'll still need to add the dtoverlay.
 
 3. Open a terminal on your Rasberry Pi and (preferably from your home directory) clone this repository, cd to the
-   OpenHVACControl directory, and build the project with maven:
-   `git clone https://github.com/lbrombach/OpenHVACControl.git`
-   `cd OpenHVACControl`
-   `mvn clean package`
-   This hopefully results in a successful build like the one shown in the image below.
+   OpenHVACControl directory, and build the project with maven:  
+   `git clone https://github.com/lbrombach/OpenHVACControl.git`  
+   `cd OpenHVACControl`  
+   `mvn clean package`  
+   This hopefully results in a successful build like the one shown in the image below.  
    <img src="/images/screenshots/buildsuccess.png" alt="buildsuccess.png" width="500"/>
 
 4. The image above shows the executable file you just built, and you can run it with the java -jar command. In my case,
-   I execute the file with:
+   I execute the file with:  
    `java -jar /home/pi/OpenHVACControl/target/OpenHVACControl-1.0-SNAPSHOT.jar`
    **Note: the file must be run with the command prompt in the OpenHVACControl directory (the root folder that you just
    cloned) in order for it to find setup and configuration files.
@@ -143,14 +143,14 @@ Please see the wiki for wiring diagrams, photos, setup, and operating instructio
    is critical to keep the json format and note change the names. If you add sensors, just add an entry but they must be
    named with the same pattern you see (zoneName+"Primary" OR zoneName+"Secondary"). Addresses must be unique as
    discussed earlier.
-   "name": "zone1Primary" ## ***DO NOT CHANGE NAME***
-   "alias": "Main Floor", ## okay to change
-   "address": "28-0316a3167aff" ##see section above for how to find sensor addresses. At least until I automate this.
-   "sensorOffset": 0, ## This is for calibration. If you notice a sensor always reads 2 degrees high, you want to apply
-   an offset of -2 here.
-   "lastTempRead": 0 ## not in use yet. This may go away.
+    - "name": "zone1Primary" ## ***DO NOT CHANGE NAME***
+    - "alias": "Main Floor", ## okay to change
+    - "address": "28-0316a3167aff" ##see section above for how to find sensor addresses. At least until I automate this.
+    - "sensorOffset": 0, ## This is for calibration. If you notice a sensor always reads 2 degrees high, you want to
+      apply an offset of -2 here.
+    - "lastTempRead": 0 ## not in use yet. This may go away.
 
-6. Recommend running a simple script at startup. The contents of my startup script are shown below.
+6. Recommend running a simple script at startup. The contents of my startup script are shown below.  
    <img src="/images/startscript.png" alt="startscript.png" width="500"/>
 
 7. With the system configured and started, you can point a web browser on that machine to localhost:8080 for the system
@@ -158,18 +158,18 @@ Please see the wiki for wiring diagrams, photos, setup, and operating instructio
    thermostat for all zones at once. At the bottom, you can also see the system outputs. Below system outputs is a
    button to take you to the future settings page where you'll be able to make changes without messing with the json
    files directly. Currently, this has a little window that should display the controllers IP address if you have it
-   connected to a network. This is how the system was designed to be used - a monitor at this controller is totally
-   optional (but recommended) and in place of conventional thermostats, a pi zero with a small touchscreen or a cheap
-   tablet pc set up with the web browser pointed to this ip address. Don't forget to add port 8080 (I navigate to
-   192.168.1.38:8080, for example).
-   <img src="/images/screenshots/ipaddress.png" alt="ipaddress.png"/>
-   
-   7.1 This works from any device with a browser that is connected to the same network. It
-   will not work from outside your network and I do not recommend opening your ports to the outside world because I have
-   taken zero security measures in this project. Keep in mind that anyone on the same network can access these pages
-   without any login, so if there is anyone using the network that you don't want messing with your system, you might
-   want to get set up a dedicated router for this system (The cheapest wireless router will do). The only security this system provides at this time is you
-   controlling access to the network it's connected to.
+   connected to a network.  
+   <img src="/images/screenshots/ipaddress.png" alt="ipaddress.png"/>  
+   This is how the system was designed to be used - a monitor at this controller is totally optional (but recommended)
+   and in place of conventional thermostats, a pi zero with a small touchscreen or a cheap tablet pc set up with the web
+   browser pointed to this ip address. Don't forget to add port 8080 (I navigate to 192.168.1.38:8080, for example).
+
+7.1 This works from any device with a browser that is connected to the same network. It will not work from outside your
+network and I do not recommend opening your ports to the outside world because I have taken zero security measures in
+this project. Keep in mind that anyone on the same network can access these pages without any login, so if there is
+anyone using the network that you don't want messing with your system, you might want to get set up a dedicated router
+for this system (The cheapest wireless router will do). The only security this system provides at this time is you
+controlling access to the network it's connected to.
 
 ## Contributing, bug reports, etc:
 
