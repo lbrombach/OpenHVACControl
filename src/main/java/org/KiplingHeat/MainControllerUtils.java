@@ -11,28 +11,24 @@ import java.util.List;
 
 public class MainControllerUtils {
 
-    enum SystemStatus {OFF, HEATING, COOLING, FAN_ON}
-
-    public static List<Zone> getZonesRequestingHeat(List<Zone> zones) {
-        List<Zone> zonesCalling = new ArrayList<Zone>();
-        for (int i = 0; i < zones.size(); i++) {
-            zones.get(i).getRequest();
-            if (zones.get(i).heatStagesRequested() > 0) {
-                zonesCalling.add(zones.get(i));
-            }
-        }
-        return zonesCalling;
-    }
-
-
+    /**
+     * calls each zone to update it's own request object and compiles a list of them for use in main controller
+     * @param zones : a list of Zone objects the system is managing
+     * @return list of requests from all zones
+     */
     public static List<Request> getAllRequests(List<Zone> zones) {
-        List<Request> requests = new ArrayList<Request>();
+        List<Request> requests = new ArrayList<>();
         for (int i = 0; i < zones.size(); i++) {
             requests.add(zones.get(i).getRequest());
         }
         return requests;
     }
 
+    /**
+     * Combines list of requests into a single request used by main control logic to manage system outputs
+     * @param requests : a list of request objects from each zone
+     * @return request object
+     */
     public static Request totalRequests(List<Request> requests) {
 
         Request total = new Request();
@@ -57,34 +53,14 @@ public class MainControllerUtils {
         return total;
     }
 
-    public static boolean isCallingSecondStageHeat(List<Request> requests) {
-        for (int i = 0; i < requests.size(); i++) {
-            if (requests.get(i).getHeatingStages() >= 2) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isCallingSecondStageCool(List<Request> requests) {
-        for (int i = 0; i < requests.size(); i++) {
-            if (requests.get(i).getCoolingStages() >= 2) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean getIsFanOnlyRequested(List<Request> requests) {
-        for (int i = 0; i < requests.size(); i++) {
-            if (requests.get(i).isFanRequested() == true) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
+    /**
+     * main control loop calls this to update each zone with the
+     * latest settings fetched from the front end
+     * @param setpoints : a list of setpoints user has each zone set to
+     * @param modes : a list of modes user has each zone set to
+     * @param fansRequests : a list of fan on/auto settings user has each zone set to
+     * @param zones : a list of Zone objects the system is managing
+     */
     public static void updateFromFrontEnd(List<Integer> setpoints, List<String> modes,
                                           List<Boolean> fansRequests, List<Zone> zones) {
         for (int i = 0; i < zones.size(); i++) {
@@ -110,7 +86,16 @@ public class MainControllerUtils {
         }
     }
 
-
+    /**
+     * Called once during startup. Passes pin assignments and gpio control object
+     * to zones for their own initialization
+     * @param ZONE_1_DAMPER_PIN  : Pi4J GPIO pin number for this damper relay
+     * @param ZONE_2_DAMPER_PIN  : Pi4J GPIO pin number for this damper relay
+     * @param ZONE_3_DAMPER_PIN  : Pi4J GPIO pin number for this damper relay
+     * @param gpio  : PI4J GPIOControl object
+     * @return
+     * @throws Exception
+     */
     public static List<Zone> initializeZones(Pin ZONE_1_DAMPER_PIN, Pin ZONE_2_DAMPER_PIN,
                                              Pin ZONE_3_DAMPER_PIN, GPIOControl gpio) throws Exception {
         List<Zone> zones;
@@ -135,9 +120,15 @@ public class MainControllerUtils {
         return zones;
     }
 
+    /**
+     * zones should name themselves "error" if they can't find themselves in the json file.
+     * this checks that all zones are properly initialized
+     * @param zones : a list of Zone objects the system is managing
+     * @return
+     */
     public static boolean validateZones(List<Zone> zones) {
         for (int i = 0; i < zones.size(); i++) {
-            if (zones.get(i).getName() == "Error")
+            if (zones.get(i).getName().equals("Error"))
                 return false;
         }
         return true;

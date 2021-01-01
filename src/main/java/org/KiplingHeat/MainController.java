@@ -24,16 +24,18 @@ public class MainController {
     private static final Pin Y1_RELAY_PIN = RaspiPin.GPIO_23;
     private static final Pin Y2_RELAY_PIN = RaspiPin.GPIO_24;
     private static final Pin FAN_RELAY_PIN = RaspiPin.GPIO_25;
-    private CallsToSystem callsToSystem;
     private GPIOControl gpio;
     private List<Zone> zones;
 
+    /**
+     * This is the main controller.
+     * Initializes system and runs system control loop
+     */
     public void mainController() {
-        System.out.println("This is the main controller");
         //initialize stuff
         try {
             gpio = new GPIOControl();
-            callsToSystem = new CallsToSystem(W1_RELAY_PIN, W2_RELAY_PIN,Y1_RELAY_PIN, Y2_RELAY_PIN, FAN_RELAY_PIN, gpio);
+            CallsToSystem.setPins(W1_RELAY_PIN, W2_RELAY_PIN,Y1_RELAY_PIN, Y2_RELAY_PIN, FAN_RELAY_PIN, gpio);
             zones = MainControllerUtils.initializeZones(ZONE_1_DAMPER_PIN, ZONE_2_DAMPER_PIN, ZONE_3_DAMPER_PIN, gpio);
             if (!MainControllerUtils.validateZones(zones)){
                 throw new Exception("Unable to initialize zones");
@@ -51,7 +53,7 @@ public class MainController {
             //update aliases and modes TO the front end. Initialize with this only once.
             ZoneDataControllerService.sendZoneDatatoFrontEnd(zones);
         
-        //decide what the system should be doing and enable only the dampers that should be
+        //main control loop. Decides what the system should be doing and enable only the dampers that should be
         while(true){
             System.out.println();
 
@@ -88,40 +90,36 @@ public class MainController {
 
                 if(totalRequests.getHeatingStages()==2){
                     CallsToSystem.startStage2Heat();
-                    continue;
                 }
                 else {
                     CallsToSystem.turnOffStage2Heat();
-                    continue;
                 }
-            }///////////////////////////////////////////////////END do heating stuff
-            else if(states.get("W1") || states.get("W2")){
-                CallsToSystem.turnHeatingOff(zones);
             }
+            else if(states.get("W1") || states.get("W2")){//there is no call but heating is on - turn it off
+                CallsToSystem.turnHeatingOff(zones);
+            }///////////////////////////////////////////////////END do heating stuff
             else if (totalRequests.getCoolingStages() > 0){ //START do cooling stuff
 
                 CallsToSystem.startStage1Cool(zones);
 
                 if (totalRequests.getCoolingStages()==2){
                     CallsToSystem.startStage2Cool();
-                    continue;
                 }
                 else {
                     CallsToSystem.turnOffStage2Cool();
-                    continue;
                 }
-            }///////////////////////////////////////////////////END do cooling stuff
-            else if(states.get("Y1") || states.get("Y2")){
-                CallsToSystem.turnCoolingOff(zones);
             }
+            else if(states.get("Y1") || states.get("Y2")){ //there is no call but cooling is on - turn it off
+                CallsToSystem.turnCoolingOff(zones);
+            }///////////////////////////////////////////////////END do cooling stuff
             else if(totalRequests.isFanRequested()){        //START do fan only stuff
                 CallsToSystem.startFanOnly(zones);
-                continue;
             }
-            else if(states.get("G")){
+            else if(states.get("G")){  //no calls for fan only but fan is on - turn it off
                 CallsToSystem.turnFanOff(zones);
-            }
-            ///////////////////////////////////////////
+            }///////////////////////////////////////////END do fan only stuff
+
+            /////////////////////////END main loop//////////////////////////
 
 
 
