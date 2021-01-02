@@ -164,7 +164,7 @@ Please see the wiki for wiring diagrams, photos, setup, and operating instructio
    and in place of conventional thermostats, a pi zero with a small touchscreen or a cheap tablet pc set up with the web
    browser pointed to this ip address. Don't forget to add port 8080 (I navigate to 192.168.1.38:8080, for example).
 
-7.1 This works from any device with a browser that is connected to the same network. It will not work from outside your
+Security Note: This works from any device with a browser that is connected to the same network. It will not work from outside your
 network and I do not recommend opening your ports to the outside world because I have taken zero security measures in
 this project. Keep in mind that anyone on the same network can access these pages without any login, so if there is
 anyone using the network that you don't want messing with your system, you might want to get set up a dedicated router
