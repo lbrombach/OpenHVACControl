@@ -24,22 +24,21 @@ public class Zone {
     public enum Mode {HEAT, COOL, OFF}
 
     public enum Temps {
-        PROCESS_SP,
-        PROCESS_TEMP,
+        PROCESS_SP,   //The process setpoint. This is the temp that will be used during a decision-cycle.
+        PROCESS_TEMP, //process temperature. This is the temperature that will be compared against the process setpoint during a decision cycle
         OCCUPIED_SP_HEAT,
         OCCUPIED_SP_COOL,
         UNOCCUPIED_SP_HEAT,
         UNOCCUPIED_SP_COOL,
-        FIRST_STAGE_DIFF,
-        SECOND_STAGE_DIFF,
-        CURRENT_PRIMARY_TEMP,
-        CURRENT_SECONDARY_TEMP
+        FIRST_STAGE_DIFF, //the number of degrees (F) from PROCESS_SP can get from PROCESS_TEMP before system starts stage 1
+        SECOND_STAGE_DIFF, //the number of degrees (F) from PROCESS_SP can get from PROCESS_TEMP before system starts stage 2
+        CURRENT_PRIMARY_TEMP, //most recent primary sensor read
+        CURRENT_SECONDARY_TEMP //most recent secondary sensor read (if present)
     }
 
     private static final Pin ZONE_1_DAMPER_PIN = RaspiPin.GPIO_12;
     private static final Pin ZONE_2_DAMPER_PIN = RaspiPin.GPIO_13;
     private static final Pin ZONE_3_DAMPER_PIN = RaspiPin.GPIO_14;
-//    private static final int DAMPER_CLOSE_DELAY = 30;  //seconds to delay closing damper if stopping last heating stage
     @Expose
     private String name;
     @Expose
@@ -49,22 +48,18 @@ public class Zone {
     @Expose
     private Mode mode;
     @Expose
-    private HashMap<Temps, Integer> temps = new HashMap<Temps, Integer>(16);
+    private HashMap<Temps, Integer> temps = new HashMap<>(16);
     @Expose
     private int secondaryIsPrimaryTime; //how long to make controller use secondary sensor instead of primary
     @Expose
-    private int secondStageTimeDelay;
-    @Expose
-    private int priority;
+    private int secondStageTimeDelay; //if setpoint is not made after this long at stage 1, system will start stage 2 even if SECOND_STAGE_DIFF is not met
     @Expose
     private boolean isOccupied;
-    private boolean damperIsOpen;
-    private int outsideAirTemp;
     @Expose
     private boolean isActive;
     @Expose
     private boolean usingSecondarySensor;
-    private long lastValidSensorRead;
+    private long lastValidSensorRead;  //the time of the last non-error sensor read (milliseconds since epoch)
     private Request request;
     private Damper damper;
 
@@ -74,11 +69,11 @@ public class Zone {
 
     public Zone(String name, GPIOControl gpio) throws InactiveSensorException {
         this.name = name;
-        if (name == "zone1") {
+        if (name.equals("zone1")) {
             this.alias = "Main Floor";
             damper = new Damper(ZONE_1_DAMPER_PIN, gpio);
 
-        } else if (name == "zone2") {
+        } else if (name.equals("zone2")) {
             this.alias = "Upper Floor";
             damper = new Damper(ZONE_2_DAMPER_PIN, gpio);
         } else {
@@ -111,13 +106,11 @@ public class Zone {
         temps.put(Temps.SECOND_STAGE_DIFF, 3);
         temps.put(Temps.CURRENT_PRIMARY_TEMP, 70);
         temps.put(Temps.CURRENT_SECONDARY_TEMP, -999);
-        
+
         secondStageTimeDelay = 10;
-        priority = 1;
         isOccupied = true;
         request = new Request();
     }
-
 
     public Zone(Pin damperPin, String name, GPIOControl gpio) throws Exception {
 
@@ -147,7 +140,6 @@ public class Zone {
                     temps.put(Temps.CURRENT_PRIMARY_TEMP, 70);
                     temps.put(Temps.CURRENT_SECONDARY_TEMP, -999);
                     this.secondStageTimeDelay = zones.get(i).secondStageTimeDelay;
-                    this.priority = zones.get(i).priority;
                     this.isOccupied = true;
                     isMatch = true;
                 }
@@ -181,11 +173,12 @@ public class Zone {
     }
 
 
-    void deactivate() {
-        isActive = false;
-    }
-
-
+    /**
+     * This method is responsible for keeping the zone's data up to date by
+     * requesting the latest from the front end and sensors, then setting the request object's
+     * number of stages requested based on mode and feedback from utility methods
+     * @return : the zone's updated request object
+     */
     public Request getRequest() {
         ZoneUtils.updateSetpoints(name, temps);
         temps.replace(Temps.PROCESS_SP, ZoneUtils.getProcessSetpoint(mode, temps, isOccupied));
@@ -193,15 +186,13 @@ public class Zone {
         try {
             ZoneUtils.getSensorData(primaryTempSensor, secondaryTempSensor, temps, usingSecondarySensor);
             if (temps.get(Temps.PROCESS_TEMP) == -999) {
-                            System.out.println("throwing exception 11 in getrequest: " );
-
-                throw new Exception("INVALID SENSOR DATA " + name);
+                throw new Exception("INVALID SENSOR DATA in Zone.getRequest() " + name);
             }
             lastValidSensorRead = System.currentTimeMillis();
         } catch (Exception e) {
             mode = Mode.OFF;
             System.out.println(e.getMessage() + "Setting zone mode to OFF internally");
-            //email, text, or alert sensor problem here
+            //add email, text, or alert sensor problem here
         }
 
 
@@ -225,7 +216,7 @@ public class Zone {
                 request.setHeatingStages(stages);
                 break;
 
-            default:
+            default: //handles "OFF" mode
                 request.setHeatingStages(0);
                 request.setCoolingStages(0);
 
@@ -236,16 +227,12 @@ public class Zone {
     }
 
 
-    public static String getFilePath() {
-        return filePath;
+    void deactivate() {
+        isActive = false;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAlias() {
@@ -296,18 +283,6 @@ public class Zone {
         this.secondStageTimeDelay = secondStageTimeDelay;
     }
 
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public long getTimeStateStarted() {
-        return request.getTimeStateStarted();
-    }
-
     public boolean isOccupied() {
         return isOccupied;
     }
@@ -318,14 +293,6 @@ public class Zone {
 
     public boolean isDamperIsOpen() {
         return damper.isOpen();
-    }
-
-    public int getOutsideAirTemp() {
-        return outsideAirTemp;
-    }
-
-    public void setOutsideAirTemp(int outsideAirTemp) {
-        this.outsideAirTemp = outsideAirTemp;
     }
 
     public boolean isActive() {
@@ -352,32 +319,12 @@ public class Zone {
         this.lastValidSensorRead = lastValidSensorRead;
     }
 
-    public int getCurrentPrimaryTemp() {
-        return temps.get(Temps.CURRENT_PRIMARY_TEMP);
-    }
-
-    public int getCurrentSecondaryTemp() {
-        return temps.get(Temps.CURRENT_SECONDARY_TEMP);
-    }
-
     public void openDamper() {
         damper.open();
     }
 
     public void closeDamper() {
         damper.close();
-    }
-
-//    public void closeDamperWithDelay() {
-//        damper.closeWithDelay(DAMPER_CLOSE_DELAY);
-//    }
-
-    public int heatStagesRequested() {
-        return request.getHeatingStages();
-    }
-
-    public int coolStagesRequested() {
-        return request.getCoolingStages();
     }
 
 
@@ -396,9 +343,6 @@ public class Zone {
                 ", firstStageTempDifferential=" + temps.get(Temps.FIRST_STAGE_DIFF) +
                 ", secondStageTempDifferential=" + temps.get(Temps.SECOND_STAGE_DIFF) +
                 ", secondStageTimeDelay=" + secondStageTimeDelay +
-                ", priority=" + priority +
-                ", damperIsOpen=" + damperIsOpen +
-                ", outsideAirTemp=" + outsideAirTemp +
                 ", isActive=" + isActive +
                 ", usingSecondarySensor=" + usingSecondarySensor +
                 ", lastValidSensorRead=" + lastValidSensorRead +

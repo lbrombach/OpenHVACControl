@@ -8,6 +8,14 @@ import java.util.List;
 
 class ZoneUtils {
 
+    /**
+     * updates the zone's temperature data hashmap with fresh sensor readings
+     * @param primary : the zone's primary temperature sensor object
+     * @param secondary : the zone's secondary sensor object
+     * @param temps : the zone's hashmap of temperature values
+     * @param hasSecondary : did the system find a secondary sensor during zone initialization
+     * @throws Exception : inactive sensor exception. Sensor will read -999 in this case.
+     */
     static void getSensorData(TempSensor primary, TempSensor secondary,
                               HashMap<Zone.Temps, Integer> temps,
                               boolean hasSecondary) throws Exception{
@@ -22,13 +30,14 @@ class ZoneUtils {
         if (temps.get(Zone.Temps.CURRENT_PRIMARY_TEMP) == -999 && hasSecondary) {
                 temps.replace (Zone.Temps.PROCESS_TEMP, temps.get(Zone.Temps.CURRENT_SECONDARY_TEMP));
         }
-        
-        System.out.println(temps.get(Zone.Temps.CURRENT_PRIMARY_TEMP) 
-                + "  " + temps.get(Zone.Temps.CURRENT_SECONDARY_TEMP)
-                +"  " + temps.get(Zone.Temps.PROCESS_TEMP));
     }
 
 
+    /**
+     * Checks with the front end in case user has changed setpoints
+     * @param name : the name of the zone
+     * @param temps : the zone's hashmap of temperature values
+     */
     static void updateSetpoints(String name, HashMap<Zone.Temps, Integer> temps){
         List<Integer> setpoints = SetpointsControllerService.getSetpoints();
         int newOccupiedSP = -999;
@@ -54,6 +63,14 @@ class ZoneUtils {
         temps.replace(Zone.Temps.UNOCCUPIED_SP_COOL, newUnoccupiedSP);
     }
 
+    /**
+     * The process setpoint is the setpoint the system will use to calculates how many stages to request.
+     * This method returns the appropriate value based on the mode and occupancy status
+     * @param mode : The Zone's mode - enum defined in Zone.java
+     * @param temps : the zone's hashmap of temperature values
+     * @param isOccupied : the zone's occupancy status
+     * @return : the process setpoint for the cycle
+     */
     static int getProcessSetpoint(Zone.Mode mode, HashMap<Zone.Temps, Integer> temps, boolean isOccupied) {
         switch (mode) {
             case COOL:
@@ -65,9 +82,16 @@ class ZoneUtils {
             default:
                 return -999; //error - should not be possible
         }
-
     }
 
+    /**
+     * Calculates how many stages of cooling to request
+     * @param temps : the zone's hashmap of temperature values
+     * @param stageDelay : if zone not satisfied after running one stage for this many minutes, start second stage
+     * @param timeInState : how long has zone been running current number of stages
+     * @param numExistingCoolingStages : how many cooling stages are already running
+     * @return : how many cooling stages the zone should request
+     */
     static int getCoolingStages(HashMap<Zone.Temps, Integer> temps, int stageDelay, long timeInState, int numExistingCoolingStages) {
         int stages = 0;
         int setPoint = temps.get(Zone.Temps.PROCESS_SP);
@@ -87,6 +111,14 @@ class ZoneUtils {
         return stages;
     }
 
+    /**
+     * Calculates how many stages of heating to request
+     * @param temps : the zone's hashmap of temperature values
+     * @param stageDelay : if zone not satisfied after running one stage for this many minutes, start second stage
+     * @param timeInState : how long has zone been running current number of stages
+     * @param numExistingHeatingStages : how many heating stages are already running
+     * @return : how many heating stages the zone should request
+     */
     static int getHeatingStages(HashMap<Zone.Temps, Integer> temps, int stageDelay, long timeInState, int numExistingHeatingStages) {
         int stages = 0;
         int setPoint = temps.get(Zone.Temps.PROCESS_SP);
@@ -106,6 +138,11 @@ class ZoneUtils {
         return stages;
     }
 
+    /**
+     * helper to convert milliseconds elapsed to minutes
+     * @param startTime : time in milliseconds since epoch
+     * @return : number of minutes elapsed from startTime until current time
+     */
     static int minutesElapsed(long startTime) {
         long millisecondsPerMinute = 60000;
         return (int) ((System.currentTimeMillis() - startTime) / millisecondsPerMinute);

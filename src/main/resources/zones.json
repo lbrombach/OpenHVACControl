@@ -14,8 +14,7 @@
       "UNOCCUPIED_SP_COOL": 70
     },
     "secondaryIsPrimaryTime": 30,
-    "secondStageTimeDelay": 1,
-    "priority": 1,
+    "secondStageTimeDelay": 10,
     "isOccupied": true,
     "isActive": true,
     "usingSecondarySensor": false
@@ -35,8 +34,7 @@
       "UNOCCUPIED_SP_COOL": 70
     },
     "secondaryIsPrimaryTime": 30,
-    "secondStageTimeDelay": 1,
-    "priority": 1,
+    "secondStageTimeDelay": 10,
     "isOccupied": true,
     "isActive": true,
     "usingSecondarySensor": true
@@ -56,8 +54,7 @@
       "UNOCCUPIED_SP_COOL": 70
     },
     "secondaryIsPrimaryTime": 30,
-    "secondStageTimeDelay": 1,
-    "priority": 1,
+    "secondStageTimeDelay": 10,
     "isOccupied": true,
     "isActive": true,
     "usingSecondarySensor": false
