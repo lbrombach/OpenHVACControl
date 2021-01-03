@@ -2,28 +2,28 @@
   {
     "name": "zone1Primary",
     "alias": "Main Floor",
-    "address": "28-0316a3167aff",
+    "address": "28-012044a332b1",
     "sensorOffset": 0,
     "lastTempRead": 0
   },
   {
     "name": "zone2Primary",
     "alias": "Upper Floor",
-    "address": "28-0316842c41ff",
+    "address": "28-012038b013c3",
     "sensorOffset": 0,
     "lastTempRead": 0
   },
   {
     "name": "zone2Secondary",
     "alias": "Upstairs Workout Room",
-    "address": "28-456A123654223",
+    "address": "28-012044bcf706",
     "sensorOffset": 0,
     "lastTempRead": 0
   },
   {
     "name": "zone3Primary",
     "alias": "bsmt",
-    "address": "28-0316842cabff",
+    "address": "28-012044bc90d3",
     "sensorOffset": 0,
     "lastTempRead": 0
   },

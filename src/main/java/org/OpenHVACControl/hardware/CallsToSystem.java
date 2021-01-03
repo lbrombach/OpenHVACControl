@@ -6,7 +6,7 @@ import org.OpenHVACControl.Zones.Zone;
 import java.util.*;
 
 public class CallsToSystem {
-    private static final int DAMPER_CLOSE_DELAY = 30; //(seconds)
+    private static final int DAMPER_CLOSE_DELAY = 0; //(seconds)
     private static Relay W1;
     private static Relay W2;
     private static Relay Y1;
@@ -90,6 +90,8 @@ public class CallsToSystem {
      * @param zones : a list of Zone objects the system is managing
      */
     public static void turnHeatingOff(List<Zone> zones) {
+        W1.setRelayOff();
+        W2.setRelayOff();        
         System.out.println("Stopping heating. System may appear to be unresponsive for a minute while closing dampers");
         try {
             Thread.sleep(DAMPER_CLOSE_DELAY * 1000);
@@ -101,9 +103,6 @@ public class CallsToSystem {
                 zones.get(i).closeDamper();
             }
         }
-
-        W1.setRelayOff();
-        W2.setRelayOff();
     }
 
     /**
@@ -141,6 +140,8 @@ public class CallsToSystem {
      * @param zones : a list of Zone objects the system is managing
      */
     public static void turnCoolingOff(List<Zone> zones) {
+        Y1.setRelayOff();
+        Y2.setRelayOff();        
         System.out.println("Stopping cooling. System may appear to be unresponsive for a minute while closing dampers");
         try {
             Thread.sleep(DAMPER_CLOSE_DELAY * 1000);
@@ -152,9 +153,6 @@ public class CallsToSystem {
                 zones.get(i).closeDamper();
             }
         }
-
-        Y1.setRelayOff();
-        Y2.setRelayOff();
         G.setRelayOff();
     }
 
