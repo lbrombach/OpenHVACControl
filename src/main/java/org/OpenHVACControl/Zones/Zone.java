@@ -327,6 +327,14 @@ public class Zone {
         damper.close();
     }
 
+    public int heatStagesRequested() {
+        return request.getHeatingStages();
+    }
+
+    public int coolStagesRequested() {
+        return request.getCoolingStages();
+    }
+
 
     @Override
     public String toString() {
