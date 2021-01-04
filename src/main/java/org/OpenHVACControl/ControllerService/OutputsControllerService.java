@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+@SuppressWarnings({"UnstableApiUsage", "UnusedAssignment"})
 public class OutputsControllerService {
 
-    private static Monitor mutex = new Monitor();
+    private static final Monitor monitor = new Monitor();
 
     private static boolean W1 = false;
     private static boolean W2 = false;
@@ -28,13 +28,15 @@ public class OutputsControllerService {
      * @return : list of system outputs
      */
     public static List<Boolean> getOutputs() {
-        mutex.enter();
+        List<Boolean> outputs = null;
+        monitor.enter();
         try {
-            return new ArrayList<Boolean>(Arrays.asList(W1, W2, Y1, Y2, G, damperZ1, damperZ2, damperZ3));
+            outputs = new ArrayList<>(Arrays.asList(W1, W2, Y1, Y2, G, damperZ1, damperZ2, damperZ3));
         }
         finally {
-            mutex.leave();
+            monitor.leave();
         }
+        return outputs;
     }
 
     /**
@@ -44,7 +46,7 @@ public class OutputsControllerService {
      * @param zones              : list of zones
      */
     public static void setOutputs(List<Boolean> systemRelaysStates, List<Zone> zones) {
-        mutex.enter();
+        monitor.enter();
         try {
         W1 = systemRelaysStates.get(0);
         W2 = systemRelaysStates.get(1);
@@ -56,7 +58,7 @@ public class OutputsControllerService {
         damperZ3 = zones.get(2).isDamperIsOpen();
         }
         finally {
-            mutex.leave();
+            monitor.leave();
         }
     }
 

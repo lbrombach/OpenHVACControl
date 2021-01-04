@@ -2,9 +2,9 @@ package org.OpenHVACControl.hardware;
 
 import com.pi4j.io.gpio.*;
 
+@SuppressWarnings("unused")
 public class Relay{
 
-    private Pin pin;
     GPIOControl gpio;
     GpioPinDigitalOutput outputPin;
     boolean isActive;
@@ -18,7 +18,6 @@ public class Relay{
      * @param gpio only one GPIOControl object should be instantiated for the entire program.
      */
     public Relay(Pin pin, GPIOControl gpio){
-        this.pin = pin;
         this.gpio = gpio;
         //initializing HIGH sets relay off (active low relays)
         outputPin = gpio.gpio.provisionDigitalOutputPin(pin, "Relay Pin", PinState.HIGH);
@@ -43,7 +42,7 @@ public class Relay{
 
     /**
      * isActive == true indicates relay coil is energized
-     * @return
+     * @return : is the relay coil energized
      */
     public boolean getState() {
         return isActive;

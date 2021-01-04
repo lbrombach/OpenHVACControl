@@ -5,8 +5,9 @@ import org.OpenHVACControl.Zones.Zone;
 
 import java.util.*;
 
+@SuppressWarnings({"ForLoopReplaceableByForEach", "PointlessBooleanExpression"})
 public class CallsToSystem {
-    private static final int DAMPER_CLOSE_DELAY = 0; //(seconds)
+    private static final int DAMPER_CLOSE_DELAY = 60; //(seconds)
     private static Relay W1;
     private static Relay W2;
     private static Relay Y1;

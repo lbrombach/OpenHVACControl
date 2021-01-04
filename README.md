@@ -29,7 +29,7 @@ crude C++ program with no real interface/information available aside from counti
 
 - Control up to 3 zones. For each zone:
     - A graphical control display as shown in the image below. From the user's point of view, this is essentially a
-      virtual thermostat.
+      virtual thermostat.  
       <img src="/images/screenshots/zone.png" alt="Zone control image" width="600"/>
     - Control 2 stages heating - Control 2 stages cooling
     - Up to two temperature sensors (these, along with each zone's logic, replace having a thermostat for each zone).
@@ -63,7 +63,7 @@ Daniel Sendula for their PI4J work and saving me a ton of work developing my own
 and support when I was first learning to use a Raspberry Pi.
 
 DS18B20 (one wire protocol) temperature sensors were chosen for the ability to add as many as needed to a single gpio
-pin and single, long wire run.<br>
+pin and single, long wire run.  
 <img src="/images/sensor_module.jpg" alt="sensor_module display" width="300"/>
 
 ## Special Obstacles and Learning Experiences

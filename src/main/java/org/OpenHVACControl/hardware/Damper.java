@@ -4,7 +4,6 @@ import com.pi4j.io.gpio.Pin;
 
 public class Damper{
 
-    private Pin pin;
     private Relay relay;
 
     private Damper() {
@@ -13,8 +12,7 @@ public class Damper{
 
     public Damper(Pin damperPin, GPIOControl gpio){
         this();
-        pin = damperPin;
-        relay = new Relay(pin, gpio);
+        relay = new Relay(damperPin, gpio);
         relay.setRelayOff();
     }
 
