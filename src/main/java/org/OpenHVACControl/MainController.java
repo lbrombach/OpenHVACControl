@@ -35,9 +35,9 @@ public class MainController {
         //initialize stuff
         try {
             gpio = new GPIOControl();
-            CallsToSystem.setPins(W1_RELAY_PIN, W2_RELAY_PIN,Y1_RELAY_PIN, Y2_RELAY_PIN, FAN_RELAY_PIN, gpio);
+            CallsToSystem.setPins(W1_RELAY_PIN, W2_RELAY_PIN, Y1_RELAY_PIN, Y2_RELAY_PIN, FAN_RELAY_PIN, gpio);
             zones = MainControllerUtils.initializeZones(ZONE_1_DAMPER_PIN, ZONE_2_DAMPER_PIN, ZONE_3_DAMPER_PIN, gpio);
-            if (!MainControllerUtils.validateZones(zones)){
+            if (!MainControllerUtils.validateZones(zones)) {
                 throw new Exception("Unable to initialize zones");
             }
 
@@ -46,15 +46,16 @@ public class MainController {
             return;
         }
 
-        for (int i =0; i<zones.size(); i++) {
+        for (int i = 0; i < zones.size(); i++) {
             System.out.println(zones.get(i).toString());
         }
 
-            //update aliases and modes TO the front end. Initialize with this only once.
-            ZoneDataControllerService.sendZoneDatatoFrontEnd(zones);
-        
+        //update aliases and modes TO the front end. Initialize with this only once.
+        ZoneDataControllerService.sendZoneDatatoFrontEnd(zones);
+        SetpointsControllerService.initializeSetpoints(zones);
+
         //main control loop. Decides what the system should be doing and enable only the dampers that should be
-        while(true){
+        while (true) {
             System.out.println();
 
             //send relay state data to front end for display
@@ -62,9 +63,9 @@ public class MainController {
 
             //update setpoints with latest FROM front end
             MainControllerUtils.updateFromFrontEnd(SetpointsControllerService.getSetpoints(),
-                                                    ZoneDataControllerService.getModes(),
-                                                    ZoneDataControllerService.getFanRequests(),
-                                                    zones);
+                    ZoneDataControllerService.getModes(),
+                    ZoneDataControllerService.getFanRequests(),
+                    zones);
 
             //totalize requests from all zones int one request object (this also gets new temps from sensors)
             List<Request> allRequests = MainControllerUtils.getAllRequests(zones);
@@ -77,51 +78,44 @@ public class MainController {
             Map<String, Boolean> states = CallsToSystem.getRelayStatesMap();
 
             //begin controller logic
-            if(totalRequests.getHeatingStages() > 0){ //////////START do heating stuff
+            if (totalRequests.getHeatingStages() > 0) { //////////START do heating stuff
 
-                if (states.get("Y1") || states.get("Y2") ){
+                if (states.get("Y1") || states.get("Y2")) {
                     CallsToSystem.turnCoolingOff(zones);
                 }
-                if (states.get("G")){
+                if (states.get("G")) {
                     CallsToSystem.turnFanOff(zones);
                 }
 
                 CallsToSystem.startStage1Heat(zones);
 
-                if(totalRequests.getHeatingStages()==2){
+                if (totalRequests.getHeatingStages() == 2) {
                     CallsToSystem.startStage2Heat();
-                }
-                else {
+                } else {
                     CallsToSystem.turnOffStage2Heat();
                 }
-            }
-            else if(states.get("W1") || states.get("W2")){//there is no call but heating is on - turn it off
+            } else if (states.get("W1") || states.get("W2")) {//there is no call but heating is on - turn it off
                 CallsToSystem.turnHeatingOff(zones);
             }///////////////////////////////////////////////////END do heating stuff
-            else if (totalRequests.getCoolingStages() > 0){ //START do cooling stuff
+            else if (totalRequests.getCoolingStages() > 0) { //START do cooling stuff
 
                 CallsToSystem.startStage1Cool(zones);
 
-                if (totalRequests.getCoolingStages()==2){
+                if (totalRequests.getCoolingStages() == 2) {
                     CallsToSystem.startStage2Cool();
-                }
-                else {
+                } else {
                     CallsToSystem.turnOffStage2Cool();
                 }
-            }
-            else if(states.get("Y1") || states.get("Y2")){ //there is no call but cooling is on - turn it off
+            } else if (states.get("Y1") || states.get("Y2")) { //there is no call but cooling is on - turn it off
                 CallsToSystem.turnCoolingOff(zones);
             }///////////////////////////////////////////////////END do cooling stuff
-            else if(totalRequests.isFanRequested()){        //START do fan only stuff
+            else if (totalRequests.isFanRequested()) {        //START do fan only stuff
                 CallsToSystem.startFanOnly(zones);
-            }
-            else if(states.get("G")){  //no calls for fan only but fan is on - turn it off
+            } else if (states.get("G")) {  //no calls for fan only but fan is on - turn it off
                 CallsToSystem.turnFanOff(zones);
             }///////////////////////////////////////////END do fan only stuff
 
             /////////////////////////END main loop//////////////////////////
-
-
 
 
         }

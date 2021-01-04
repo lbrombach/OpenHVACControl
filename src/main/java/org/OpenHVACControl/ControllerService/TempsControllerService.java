@@ -22,25 +22,27 @@ public class TempsControllerService {
 
     /**
      * MainController() calls this to update the most recent sensor and process temperatures
+     *
      * @param zones : list of zones
      */
     public static void setTemps(List<Zone> zones) {
 
-            zone1PrimaryTemp = zones.get(0).getTemp(Zone.Temps.CURRENT_PRIMARY_TEMP);
-            zone2PrimaryTemp = zones.get(1).getTemp(Zone.Temps.CURRENT_PRIMARY_TEMP);
-            zone3PrimaryTemp = zones.get(2).getTemp(Zone.Temps.CURRENT_PRIMARY_TEMP);
-            zone1SecondaryTemp = zones.get(0).getTemp(Zone.Temps.CURRENT_SECONDARY_TEMP);
-            zone2SecondaryTemp = zones.get(1).getTemp(Zone.Temps.CURRENT_SECONDARY_TEMP);
-            zone3SecondaryTemp = zones.get(2).getTemp(Zone.Temps.CURRENT_SECONDARY_TEMP);
-            zone1UsingTemp = zones.get(0).getTemp(Zone.Temps.PROCESS_TEMP);
-            zone2UsingTemp = zones.get(1).getTemp(Zone.Temps.PROCESS_TEMP);
-            zone3UsingTemp = zones.get(2).getTemp(Zone.Temps.PROCESS_TEMP);
+        zone1PrimaryTemp = zones.get(0).getTemp(Zone.Temps.CURRENT_PRIMARY_TEMP);
+        zone2PrimaryTemp = zones.get(1).getTemp(Zone.Temps.CURRENT_PRIMARY_TEMP);
+        zone3PrimaryTemp = zones.get(2).getTemp(Zone.Temps.CURRENT_PRIMARY_TEMP);
+        zone1SecondaryTemp = zones.get(0).getTemp(Zone.Temps.CURRENT_SECONDARY_TEMP);
+        zone2SecondaryTemp = zones.get(1).getTemp(Zone.Temps.CURRENT_SECONDARY_TEMP);
+        zone3SecondaryTemp = zones.get(2).getTemp(Zone.Temps.CURRENT_SECONDARY_TEMP);
+        zone1UsingTemp = zones.get(0).getTemp(Zone.Temps.PROCESS_TEMP);
+        zone2UsingTemp = zones.get(1).getTemp(Zone.Temps.PROCESS_TEMP);
+        zone3UsingTemp = zones.get(2).getTemp(Zone.Temps.PROCESS_TEMP);
 
     }
 
 
     /**
      * front end call this to retrieve list of sensor and process temperatures
+     *
      * @return
      */
     public static List<Integer> getTemps() {

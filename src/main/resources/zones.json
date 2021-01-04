@@ -22,7 +22,7 @@
   {
     "name": "zone2",
     "alias": "Upper Floor",
-    "mode": "COOL",
+    "mode": "HEAT",
     "temps": {
       "SECOND_STAGE_DIFF": 3,
       "FIRST_STAGE_DIFF": 2,

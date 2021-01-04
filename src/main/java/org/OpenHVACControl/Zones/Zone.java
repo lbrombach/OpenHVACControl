@@ -177,6 +177,7 @@ public class Zone {
      * This method is responsible for keeping the zone's data up to date by
      * requesting the latest from the front end and sensors, then setting the request object's
      * number of stages requested based on mode and feedback from utility methods
+     *
      * @return : the zone's updated request object
      */
     public Request getRequest() {
