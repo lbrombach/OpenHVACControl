@@ -28,10 +28,11 @@ crude C++ program with no real interface/information available aside from counti
 ## Functionalities/features:
 
 - Control up to 3 zones. For each zone:
-    - <img src="/images/screenshots/zone.png" alt="Zone control image" width="600"/>
+    - A graphical control display as shown in the image below. From the user's point of view, this is essentially a
+      virtual thermostat.
+      <img src="/images/screenshots/zone.png" alt="Zone control image" width="600"/>
     - Control 2 stages heating - Control 2 stages cooling
     - Up to two temperature sensors (these, along with each zone's logic, replace having a thermostat for each zone).
-    - <img src="/images/screenshots/outputs.png" alt="Outputs display" width="600"/>  
     - in case of primary sensor failure, system will check secondary sensor
 
 - Graphical User Interface
@@ -39,7 +40,7 @@ crude C++ program with no real interface/information available aside from counti
     - Home (System overview) page allows for control of all zones
     - System output display so user can tell at a glance what stages are on and what zone dampers are open or closed.
 
--   <img src="/images/outputs.png" alt="Outputs display" width="600"/>
+  - <img src="/images/screenshots/outputs.png" alt="Outputs display" width="600"/>  
 
 - Emergency operation mode. In event of controller or relay module failure, user can use toggle switches to open zones
   manually and operate as a single-zone system using an off-the-shelf thermostat.
@@ -62,7 +63,7 @@ Daniel Sendula for their PI4J work and saving me a ton of work developing my own
 and support when I was first learning to use a Raspberry Pi.
 
 DS18B20 (one wire protocol) temperature sensors were chosen for the ability to add as many as needed to a single gpio
-pin and single, long wire run.
+pin and single, long wire run.<br>
 <img src="/images/sensor_module.jpg" alt="sensor_module display" width="300"/>
 
 ## Special Obstacles and Learning Experiences
@@ -166,7 +167,7 @@ Please see the wiki for wiring diagrams, photos, setup, and operating instructio
    and in place of conventional thermostats, a pi zero with a small touchscreen or a cheap tablet pc set up with the web
    browser pointed to this ip address. Don't forget to add port 8080 (I navigate to 192.168.1.38:8080, for example).
 
-Security Note: This works from any device with a browser that is connected to the same network. It will not work from
+***Security Note:*** This works from any device with a browser that is connected to the same network. It will not work from
 outside your network and I do not recommend opening your ports to the outside world because I have taken zero security
 measures in this project. Keep in mind that anyone on the same network can access these pages without any login, so if
 there is anyone using the network that you don't want messing with your system, you might want to get set up a dedicated
