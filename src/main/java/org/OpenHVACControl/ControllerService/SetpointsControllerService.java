@@ -13,11 +13,20 @@ public class SetpointsControllerService {
     private static int zone2UnoccupiedSP = 74;
     private static int zone3UnoccupiedSP = 74;
 
+    /**
+     * MainController() calls this to get the most recent setpoints
+     * @return : list of setpoints
+     */
     public static List<Integer> getSetpoints(){
         return new ArrayList<>(Arrays.asList(zone1OccupiedSP, zone2OccupiedSP, zone3OccupiedSP,
                 zone1UnoccupiedSP, zone2UnoccupiedSP, zone3UnoccupiedSP));
     }
 
+    /**
+     * front end uses to increment the setpoint for teh zone passed in
+     * @param zoneNum : The number of the zone
+     * @return : the new setpoint
+     */
     public static Integer increaseSP(int zoneNum){
         switch(zoneNum){
             case 1:
@@ -33,6 +42,11 @@ public class SetpointsControllerService {
         return zone1OccupiedSP;
     }
 
+    /**
+     * front end uses to decrement the setpoint for teh zone passed in
+     * @param zoneNum : The number of the zone
+     * @return : the new setpoint
+     */
     public static Integer decreaseSP(int zoneNum){
         switch(zoneNum){
             case 1:

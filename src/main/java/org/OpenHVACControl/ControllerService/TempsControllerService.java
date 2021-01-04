@@ -19,10 +19,12 @@ public class TempsControllerService {
     private static int zone3UsingTemp = 74;
 
     //set each update in MainController() while loop
+
+    /**
+     * MainController() calls this to update the most recent sensor and process temperatures
+     * @param zones : list of zones
+     */
     public static void setTemps(List<Zone> zones) {
-        //try {
-          //  if (temps.size() != 9)
-          //      throw new Exception("temps list must be size 9 and ordered as below");
 
             zone1PrimaryTemp = zones.get(0).getTemp(Zone.Temps.CURRENT_PRIMARY_TEMP);
             zone2PrimaryTemp = zones.get(1).getTemp(Zone.Temps.CURRENT_PRIMARY_TEMP);
@@ -34,13 +36,13 @@ public class TempsControllerService {
             zone2UsingTemp = zones.get(1).getTemp(Zone.Temps.PROCESS_TEMP);
             zone3UsingTemp = zones.get(2).getTemp(Zone.Temps.PROCESS_TEMP);
 
-      //  } catch (Exception e) {
-      //      System.out.println(e.getMessage());
-      //      e.printStackTrace();
-       // }
     }
 
 
+    /**
+     * front end call this to retrieve list of sensor and process temperatures
+     * @return
+     */
     public static List<Integer> getTemps() {
         return new ArrayList<>(Arrays.asList(zone1PrimaryTemp, zone2PrimaryTemp, zone3PrimaryTemp,
                 zone1SecondaryTemp, zone2SecondaryTemp, zone3SecondaryTemp,

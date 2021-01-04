@@ -14,15 +14,17 @@ public abstract class AbstractSensor {
     static final String filePath = "src/main/resources/tempSensors.json";
     protected String name;
     protected String alias;
-    protected String address = null;
+    protected String address = null; //either an address or a GPIO pin number
     protected int sensorOffset;
-    protected GPIOControl gpio;   //////////*******pass reference to gpio control object instead of creating new one********
-
 
 
     protected AbstractSensor(){}
 
-    //constructor
+    /**
+     * constructor - initializes sensor with data from tempSensors.json based on the name passed in
+     * @param name : the sensor name
+     * @throws InactiveSensorException :
+     */
     public AbstractSensor (String name)  throws InactiveSensorException {
         try {
             this.name = name;
@@ -52,7 +54,6 @@ public abstract class AbstractSensor {
             e.printStackTrace();
         }
 
-        //System.out.println(name + " sensor address = " + address);
     }
 
     protected abstract void applyNewConfig(AbstractSensor newSetupConfig);

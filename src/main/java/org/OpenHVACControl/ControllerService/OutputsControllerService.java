@@ -18,10 +18,19 @@ public class OutputsControllerService {
     private static boolean damperZ3 = false;
 
 
+    /**
+     * the front end calls this to display the system outputs
+     * @return : list of system outputs
+     */
     public static List<Boolean> getOutputs() {
         return new ArrayList<Boolean>(Arrays.asList(W1, W2, Y1, Y2, G, damperZ1, damperZ2, damperZ3) );
     }
 
+    /**
+     * the back end (in MainController() ) uses this to keep the values here updated
+     * @param systemRelaysStates : list of states of all the hvac system relays
+     * @param zones : list of zones
+     */
     public static void setOutputs(List<Boolean> systemRelaysStates, List<Zone> zones){        
                 W1=systemRelaysStates.get(0);
                 W2=systemRelaysStates.get(1);

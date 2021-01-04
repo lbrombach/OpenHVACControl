@@ -2,7 +2,7 @@ package org.OpenHVACControl.hardware;
 
 import com.pi4j.io.gpio.Pin;
 
-public class Damper extends Thread{
+public class Damper{
 
     private Pin pin;
     private Relay relay;
@@ -18,34 +18,26 @@ public class Damper extends Thread{
         relay.setRelayOff();
     }
 
-    public void setPinNumber(Pin pinNumber) {
-        pin = pinNumber;
-    }
-
-    //this will reflect relay state, not simply pin state because relays are active low
+    /**
+     * Assumes the dampers are wired such that they are open when the relay is coil is energized
+     * @return : is the damper open
+     */
     public boolean isOpen() {
         return relay.getState();
     }
 
+    /**
+     * Assumes the dampers are wired such that they are open when the relay is coil is energized
+     */
     public void open() {
         relay.setRelayOn();
     }
 
+    /**
+     * Assumes the dampers are wired such that they are open when the relay is coil is energized
+     */
     public void close() {
         relay.setRelayOff();
     }
 
-/*
-    public void closeWithDelay(int seconds) {
-        long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis()-startTime < seconds*1000){
-            try {
-                sleep(1000, 0);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        close();
-    }
-*/
 }

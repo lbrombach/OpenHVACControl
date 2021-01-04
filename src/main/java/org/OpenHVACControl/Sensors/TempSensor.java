@@ -8,15 +8,16 @@ public class TempSensor extends AbstractSensor {
 
     private long lastReadTime;
     private int lastTempRead;
-    private TempSensor newSetupConfig;
-
 
     public TempSensor(String name) throws InactiveSensorException {
         super(name);
     }
 
+    /**
+     * @return : the floating point temperature in degrees Fahrenheit. Returns -999 in case of read failure.
+     * @throws Exception : temperature read error
+     */
     public float getTemp() throws Exception {
-//        System.out.println("Getting temperature from sensor " + name);
         String devicePath = "/sys/bus/w1/devices/" + address + "/w1_slave";
         float temp = -999;
         try {
@@ -26,7 +27,6 @@ public class TempSensor extends AbstractSensor {
             temp = temp / 1000.0f * 1.8f + 32.0f + sensorOffset;  //temp data comes as millidegrees celsius. Convert to F and apply offset
             lastTempRead = (int) temp;
             lastReadTime = System.currentTimeMillis();
-//            System.out.println("TEMP READ = " + temp + " deg F");
         } catch (IOException e) {
             System.out.println("IO exception reading temp? Are you simulating (not on a PI) or is sensor bad?");
             throw new Exception(name + " temp read error");
@@ -54,7 +54,6 @@ public class TempSensor extends AbstractSensor {
                 ", alias='" + alias + '\'' +
                 ", address='" + address + '\'' +
                 ", sensorOffset=" + sensorOffset +
-                ", gpio=" + gpio +
                 ", lastReadTime=" + lastReadTime +
                 ", lastTempRead=" + lastTempRead +
                 '}';

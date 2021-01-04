@@ -12,7 +12,7 @@ simply play and learn instead of using an off-the-shelf thermostat.
 ## Purpose/Motivation:
 
 "Multi-stage" means that the furnace or air conditioner is capable of running at either "low" or "high" unlike standard
-equipent that can only be "on" or "off." This saves on energy and can contribute to better humidity control for
+equipment that can only be "on" or "off." This saves on energy and can contribute to better humidity control for
 increased comfort and reduced energy consumption. "Multi-zone" means different areas of the home or building have their
 own thermostat, and motorized dampers in ductwork open and close to control the flow of air to the different zones.
 (hydronic systems user either motorized valves or control different pumps for different zones).  
@@ -27,10 +27,11 @@ crude C++ program with no real interface/information available aside from counti
 
 ## Functionalities/features:
 
-- Control up to 3 zones. For each zone:  
+- Control up to 3 zones. For each zone:
     - <img src="/images/screenshots/zone.png" alt="Zone control image" width="600"/>
     - Control 2 stages heating - Control 2 stages cooling
-    - Up to two temperature sensors (these replace having a thermostat for each zone)
+    - Up to two temperature sensors (these, along with each zone's logic, replace having a thermostat for each zone).
+    - <img src="/images/screenshots/outputs.png" alt="Outputs display" width="600"/>  
     - in case of primary sensor failure, system will check secondary sensor
 
 - Graphical User Interface
@@ -38,7 +39,7 @@ crude C++ program with no real interface/information available aside from counti
     - Home (System overview) page allows for control of all zones
     - System output display so user can tell at a glance what stages are on and what zone dampers are open or closed.
 
-    - <img src="/images/screenshots/outputs.png" alt="Outputs display" width="600"/>
+-   <img src="/images/outputs.png" alt="Outputs display" width="600"/>
 
 - Emergency operation mode. In event of controller or relay module failure, user can use toggle switches to open zones
   manually and operate as a single-zone system using an off-the-shelf thermostat.
@@ -62,6 +63,7 @@ and support when I was first learning to use a Raspberry Pi.
 
 DS18B20 (one wire protocol) temperature sensors were chosen for the ability to add as many as needed to a single gpio
 pin and single, long wire run.
+<img src="/images/sensor_module.jpg" alt="sensor_module display" width="300"/>
 
 ## Special Obstacles and Learning Experiences
 
@@ -164,12 +166,24 @@ Please see the wiki for wiring diagrams, photos, setup, and operating instructio
    and in place of conventional thermostats, a pi zero with a small touchscreen or a cheap tablet pc set up with the web
    browser pointed to this ip address. Don't forget to add port 8080 (I navigate to 192.168.1.38:8080, for example).
 
-Security Note: This works from any device with a browser that is connected to the same network. It will not work from outside your
-network and I do not recommend opening your ports to the outside world because I have taken zero security measures in
-this project. Keep in mind that anyone on the same network can access these pages without any login, so if there is
-anyone using the network that you don't want messing with your system, you might want to get set up a dedicated router
-for this system (The cheapest wireless router will do). The only security this system provides at this time is you
-controlling access to the network it's connected to.
+Security Note: This works from any device with a browser that is connected to the same network. It will not work from
+outside your network and I do not recommend opening your ports to the outside world because I have taken zero security
+measures in this project. Keep in mind that anyone on the same network can access these pages without any login, so if
+there is anyone using the network that you don't want messing with your system, you might want to get set up a dedicated
+router for this system (The cheapest wireless router will do). The only security this system provides at this time is
+you controlling access to the network it's connected to.
+
+## System Operation info:
+
+The main control loop is located in MainController.java. This class has one method that handles some setup matters such
+as initializing the zones, then loops forever to complete the control sequence. Each zone is responsible for calculating
+how many stages of heating or cooling it needs to reach the temperature setpoint the user controls from the interface,
+and the controller then checks the requests from all zones to decide whether to set the system to heating, cooling, off,
+or run only the fan for circulation. The controller prioritizes calls for heat - only if there are no zones requesting
+heat does the controller check if any zones are requesting cooling. Only if no zones are requesting cooling does the
+controller check if any zones are requesting fan-only operation. When turning off heating or cooling either due to
+reaching setpoint or user turn the mode to "OFF" , there is a delay of about a minute to ensure the system has time to
+cool down before closing dampers or processing a new request.
 
 ## Contributing, bug reports, etc:
 
