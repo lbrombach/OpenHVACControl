@@ -23,11 +23,9 @@ public class WebPageController {
     }
     
     @RequestMapping("/commonFun.js")
-    public String getcommonFun(){
+    public String getCommonFun(){
         return  "commonFun.js";
     }
-   
 
-    
 }
 

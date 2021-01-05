@@ -1,0 +1,279 @@
+@startuml
+class org.OpenHVACControl.Zones.Request {
+- int heatingStages
+- int coolingStages
+- boolean fanRequest
+- long timeStateStarted
++ int getHeatingStages()
++ void setHeatingStages(int)
++ int getCoolingStages()
++ void setCoolingStages(int)
++ boolean isFanRequested()
++ void setFanRequest(boolean)
++ long getTimeStateStarted()
++ void setTimeStateStarted(long)
++ String toString()
+}
+class org.OpenHVACControl.Sensors.InactiveZoneException {
+}
+class org.OpenHVACControl.ControllerService.ZoneDataControllerService {
+- {static} Monitor monitor
+~ {static} List<String> aliases
+~ {static} List<String> modes
+~ {static} List<Boolean> fansRequested
++ {static} List<String> getAliases()
++ {static} List<String> getModes()
++ {static} List<Boolean> getFanRequests()
++ {static} void sendZoneDatatoFrontEnd(List<Zone>)
++ {static} void setMode(Integer,String)
++ {static} void setFanRequests(Integer)
+}
+class org.OpenHVACControl.Sensors.TempSensor {
+- long lastReadTime
+- int lastTempRead
++ float getTemp()
+# void applyNewConfig(AbstractSensor)
++ String toString()
+}
+class org.OpenHVACControl.Sensors.InactiveSensorException {
+}
+class org.OpenHVACControl.Zones.ZoneUtilsTest {
+- HashMap<Zone.Temps,Integer> temps
++ void setUp()
++ void testGetProcessSetpoint()
++ void testMinutesElapsed()
+}
+class org.OpenHVACControl.HTMLControllers.WebPageController {
++ String getIndex()
++ String getSettings()
++ String getSensorsSetup()
++ String getCommonFun()
+}
+class org.OpenHVACControl.Sensors.TempSensorTest {
+~ TempSensor sensor
++ void testBadName()
++ void test()
+}
+class org.OpenHVACControl.HTMLControllers.SettingsController {
++ String getIP()
+}
+class org.OpenHVACControl.MainControllerUtils {
++ {static} List<Request> getAllRequests(List<Zone>)
++ {static} Request totalRequests(List<Request>)
++ {static} void updateFromFrontEnd(List<Integer>,List<String>,List<Boolean>,List<Zone>)
++ {static} List<Zone> initializeZones(Pin,Pin,Pin,GPIOControl)
++ {static} boolean validateZones(List<Zone>)
+}
+class org.OpenHVACControl.hardware.GPIOControl {
++ GpioController gpio
+}
+class org.OpenHVACControl.HTMLControllers.SetpointsController {
++ List<Integer> getSetpoints()
++ int increaseSP(String)
++ int decreaseSP(String)
+}
+class org.OpenHVACControl.HTMLControllers.ZoneDataController {
++ List<String> getAliases()
++ List<String> getModes()
++ List<Boolean> getFansRequested()
++ void setMode(String,String)
++ void setFanRequested(String)
+}
+class org.OpenHVACControl.HTMLControllers.TempsController {
++ List<Integer> getTemps()
+}
+class org.OpenHVACControl.hardware.Relay {
+~ GPIOControl gpio
+~ GpioPinDigitalOutput outputPin
+~ boolean isActive
++ void setRelayOn()
++ void setRelayOff()
++ boolean getState()
+}
+class org.OpenHVACControl.hardware.Damper {
+- Relay relay
++ boolean isOpen()
++ void open()
++ void close()
+}
+abstract class org.OpenHVACControl.Sensors.AbstractSensor {
+~ {static} String filePath
+# String name
+# String alias
+# String address
+# int sensorOffset
+# {abstract}void applyNewConfig(AbstractSensor)
++ void setName(String)
++ String getName()
++ void setAlias(String)
++ String getAlias()
++ void setAddress(String)
++ String getAddress()
++ int getSensorOffset()
++ void setSensorOffset(int)
++ String toString()
+}
+class org.OpenHVACControl.ControllerService.SetpointsControllerService {
+- {static} Monitor monitor
+- {static} int zone1OccupiedSP
+- {static} int zone2OccupiedSP
+- {static} int zone3OccupiedSP
+- {static} int zone1UnoccupiedSP
+- {static} int zone2UnoccupiedSP
+- {static} int zone3UnoccupiedSP
++ {static} void initializeSetpoints(List<Zone>)
++ {static} List<Integer> getSetpoints()
++ {static} Integer increaseSP(int)
++ {static} Integer decreaseSP(int)
+}
+class org.OpenHVACControl.HTMLControllers.OutputsController {
++ List<Boolean> getOutputs()
+}
+class org.OpenHVACControl.MainControllerUtilsTest {
+~ Request zone1Req
+~ Request zone2Req
+~ Request zone3Req
+~ List<Request> requests
++ void testGetZonesRequestingHeat()
++ void testGetAllRequests()
++ void testTotalRequests()
++ void testIsCallingSecondStageHeat()
++ void testIsCallingSecondStageCool()
++ void testInitializeZones()
++ void testValidateZones()
+}
+class org.OpenHVACControl.Zones.Zone {
+~ {static} String filePath
+- {static} Pin ZONE_1_DAMPER_PIN
+- {static} Pin ZONE_2_DAMPER_PIN
+- {static} Pin ZONE_3_DAMPER_PIN
+- String name
+- String alias
+- TempSensor primaryTempSensor
+- TempSensor secondaryTempSensor
+- Mode mode
+- HashMap<Temps,Integer> temps
+- int secondaryIsPrimaryTime
+- int secondStageTimeDelay
+- boolean isOccupied
+- boolean isActive
+- boolean usingSecondarySensor
+- long lastValidSensorRead
+- Request request
+- Damper damper
++ Request getRequest()
+~ void deactivate()
++ String getName()
++ String getAlias()
++ void setAlias(String)
++ Mode getMode()
++ void setMode(Mode)
++ void setFanRequest(boolean)
++ boolean isFanRequested()
++ int getTemp(Temps)
++ void setTemp(Temps,int)
++ int getSecondaryIsPrimaryTime()
++ void setSecondaryIsPrimaryTime(int)
++ int getSecondStageTimeDelay()
++ void setSecondStageTimeDelay(int)
++ boolean isOccupied()
++ void setOccupied(boolean)
++ boolean isDamperIsOpen()
++ boolean isActive()
++ void setActive(boolean)
++ boolean isUsingSecondarySensor()
++ void setUsingSecondarySensor(boolean)
++ long getLastValidSensorRead()
++ void setLastValidSensorRead(long)
++ void openDamper()
++ void closeDamper()
++ int heatStagesRequested()
++ int coolStagesRequested()
++ String toString()
+}
+class org.OpenHVACControl.ControllerService.OutputsControllerService {
+- {static} Monitor monitor
+- {static} boolean W1
+- {static} boolean W2
+- {static} boolean Y1
+- {static} boolean Y2
+- {static} boolean G
+- {static} boolean damperZ1
+- {static} boolean damperZ2
+- {static} boolean damperZ3
++ {static} List<Boolean> getOutputs()
++ {static} void setOutputs(List<Boolean>,List<Zone>)
+}
+class org.OpenHVACControl.Zones.ZoneUtils {
+~ {static} void getSensorData(TempSensor,TempSensor,HashMap<Zone.Temps,Integer>,boolean)
+~ {static} void updateSetpoints(String,HashMap<Zone.Temps,Integer>)
+~ {static} int getProcessSetpoint(Zone.Mode,HashMap<Zone.Temps,Integer>,boolean)
+~ {static} int getCoolingStages(HashMap<Zone.Temps,Integer>,int,long,int)
+~ {static} int getHeatingStages(HashMap<Zone.Temps,Integer>,int,long,int)
+~ {static} int minutesElapsed(long)
+}
+class org.OpenHVACControl.MainControllerTest {
++ void setUp()
++ void testMainController()
+}
+class org.OpenHVACControl.Main {
++ {static} void main(String[])
+}
+class org.OpenHVACControl.hardware.CallsToSystem {
+- {static} int DAMPER_CLOSE_DELAY
+- {static} Relay W1
+- {static} Relay W2
+- {static} Relay Y1
+- {static} Relay Y2
+- {static} Relay G
++ {static} void setPins(Pin,Pin,Pin,Pin,Pin,GPIOControl)
++ {static} List<Boolean> getRelayStates()
++ {static} Map<String,Boolean> getRelayStatesMap()
++ {static} void startStage1Heat(List<Zone>)
++ {static} void startStage2Heat()
++ {static} void turnOffStage2Heat()
++ {static} void turnHeatingOff(List<Zone>)
++ {static} void startStage1Cool(List<Zone>)
++ {static} void startStage2Cool()
++ {static} void turnOffStage2Cool()
++ {static} void turnCoolingOff(List<Zone>)
++ {static} void startFanOnly(List<Zone>)
++ {static} void turnFanOff(List<Zone>)
+}
+class org.OpenHVACControl.MainController {
+- {static} Pin ZONE_1_DAMPER_PIN
+- {static} Pin ZONE_2_DAMPER_PIN
+- {static} Pin ZONE_3_DAMPER_PIN
+- {static} Pin W1_RELAY_PIN
+- {static} Pin W2_RELAY_PIN
+- {static} Pin Y1_RELAY_PIN
+- {static} Pin Y2_RELAY_PIN
+- {static} Pin FAN_RELAY_PIN
+- GPIOControl gpio
+- List<Zone> zones
++ void mainController()
+}
+class org.OpenHVACControl.ControllerService.TempsControllerService {
+- {static} Monitor monitor
+- {static} int zone1PrimaryTemp
+- {static} int zone2PrimaryTemp
+- {static} int zone3PrimaryTemp
+- {static} int zone1SecondaryTemp
+- {static} int zone2SecondaryTemp
+- {static} int zone3SecondaryTemp
+- {static} int zone1UsingTemp
+- {static} int zone2UsingTemp
+- {static} int zone3UsingTemp
++ {static} void setTemps(List<Zone>)
++ {static} List<Integer> getTemps()
+}
+
+
+org.OpenHVACControl.Sensors.Exception <|-- org.OpenHVACControl.Sensors.InactiveZoneException
+org.OpenHVACControl.Sensors.AbstractSensor <|-- org.OpenHVACControl.Sensors.TempSensor
+org.OpenHVACControl.Sensors.Exception <|-- org.OpenHVACControl.Sensors.InactiveSensorException
+junit.framework.TestCase <|-- org.OpenHVACControl.Zones.ZoneUtilsTest
+junit.framework.TestCase <|-- org.OpenHVACControl.Sensors.TempSensorTest
+junit.framework.TestCase <|-- org.OpenHVACControl.MainControllerUtilsTest
+junit.framework.TestCase <|-- org.OpenHVACControl.MainControllerTest
+@enduml
