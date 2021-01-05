@@ -22,7 +22,10 @@ public class WebPageController {
         return  "sensorSetup.html";
     }
     
-    
+    @RequestMapping("/commonFun.js")
+    public String getcommonFun(){
+        return  "commonFun.js";
+    }
    
 
     
