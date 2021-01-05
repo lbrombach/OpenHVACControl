@@ -42,13 +42,79 @@
     var update_loop = setInterval(Update, 2000);
 
     function Update(){
-        getAliases();
-        getTemps();
-        getSetpoints();
-        getModes();
-        getFanSettings();
+        getAlias();
+        getTemp();
+        getSetpoint();
+        getMode();
+        getFanSetting();
     }
+    
+    function getAlias(){
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/zonedata/aliases',
+            success: function(data){
+                document.getElementById("#ZONE1ALIAS").innerHTML = data[0];
+            },
+            error: function(){
+                console.log("Error Failed To Retrieve Alias Data");
+            }
+        });
+    }
+    
+    function getTemp(){
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/temps',
+            success: function(data){
+                document.getElementById("#ZONE1USINGTEMP").innerHTML = data[6];
+            },
+            error: function(){console.log("Error Failed To Retrieve Temperature Data");}
+        });
+    }    
 
+    function getSetpoint(){
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/setpoints',
+            success: function(data){
+                document.getElementById("#ZONE1SETPOINT").innerHTML = data[0];
+            },
+            error: function(){console.log("Error Failed To Retrieve Setpoint Data");}
+        });
+    }
+    
+    function getMode(){
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/zonedata/modes',
+            success: function(data){
+                document.getElementById("#ZONE1MODE").innerHTML = data[0];
+            },
+            error: function(){
+                console.log("Error Failed To Retrieve Mode Data");
+            }
+        });
+    }    
+
+
+    function getFanSetting(){
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/zonedata/fans',
+            success: function(data){
+                document.getElementById("#ZONE1FAN").innerHTML = (data[0] == true) ? "ON":"AUTO";
+            },
+            error: function(){
+                console.log("Error Failed To Retrieve Fan Data");
+            }
+        });
+    }
 </script>
 
 </body>
