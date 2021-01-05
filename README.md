@@ -40,7 +40,7 @@ crude C++ program with no real interface/information available aside from counti
     - Home (System overview) page allows for control of all zones
     - System output display so user can tell at a glance what stages are on and what zone dampers are open or closed.
 
-  - <img src="/images/screenshots/outputs.png" alt="Outputs display" width="600"/>  
+    <img src="/images/screenshots/outputs.png" alt="Outputs display" width="600"/>  
 
 - Emergency operation mode. In event of controller or relay module failure, user can use toggle switches to open zones
   manually and operate as a single-zone system using an off-the-shelf thermostat.
