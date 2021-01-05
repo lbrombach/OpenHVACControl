@@ -26,7 +26,8 @@
         Temp 1  :  <textarea id="#ZONE1TEMP1"></textarea>   Temp 2: <textarea id="#ZONE1TEMP2"></textarea>    Using temp:  <textarea
                     id="#ZONE1USINGTEMP"></textarea>
         Setpoint:  <textarea id="#ZONE1SETPOINT"></textarea>   <button onClick="increaseSP(1);">&nbsp;Up&nbsp;</button> <button
-                    onClick="decreaseSP(1);">Down</button>                      Fan       :  <textarea id="#ZONE1FAN"></textarea> <button onClick="toggleFanOnAuto(1);">&nbsp;Auto/On</button>
+                    onClick="decreaseSP(1);">Down</button>                      Fan       :  <textarea
+                    id="#ZONE1FAN"></textarea> <button onClick="toggleFanOnAuto(1);">&nbsp;Auto/On</button>
         </h3></pre>
     </div>
     <hr>
@@ -39,7 +40,8 @@
         Temp 1  :  <textarea id="#ZONE2TEMP1"></textarea>   Temp 2: <textarea id="#ZONE2TEMP2"></textarea>    Using temp:  <textarea
                     id="#ZONE2USINGTEMP"></textarea>
         Setpoint:  <textarea id="#ZONE2SETPOINT"></textarea>   <button onClick="increaseSP(2);">&nbsp;Up&nbsp;</button> <button
-                    onClick="decreaseSP(2);">Down</button>                      Fan       :  <textarea id="#ZONE2FAN"></textarea> <button onClick="toggleFanOnAuto(2);">&nbsp;Auto/On</button>
+                    onClick="decreaseSP(2);">Down</button>                      Fan       :  <textarea
+                    id="#ZONE2FAN"></textarea> <button onClick="toggleFanOnAuto(2);">&nbsp;Auto/On</button>
         </h3></pre>
     </div>
     <hr>
@@ -52,7 +54,8 @@
         Temp 1  :  <textarea id="#ZONE3TEMP1"></textarea>   Temp 2: <textarea id="#ZONE3TEMP2"></textarea>   Using temp:  <textarea
                     id="#ZONE3USINGTEMP"></textarea>
         Setpoint:  <textarea id="#ZONE3SETPOINT"></textarea>   <button onClick="increaseSP(3);">&nbsp;Up&nbsp;</button> <button
-                    onClick="decreaseSP(3);">Down</button>                     Fan       :  <textarea id="#ZONE3FAN"></textarea> <button onClick="toggleFanOnAuto(3);">&nbsp;Auto/On</button>
+                    onClick="decreaseSP(3);">Down</button>                     Fan       :  <textarea
+                    id="#ZONE3FAN"></textarea> <button onClick="toggleFanOnAuto(3);">&nbsp;Auto/On</button>
         </h3></pre>
     </div>
     <hr>
@@ -74,7 +77,13 @@
         </pre>
     </div>
     <hr>
-    <pre>         <input type="button" onclick="location.href='settings';" value="Settings"/></pre>
+    <pre>         <input type="button" onclick="location.href='settings';" value="Settings"/><input type="button"
+                                                                                                    onclick="location.href='/';"
+                                                                                                    value="Home"/> <input
+            type="button" onclick="location.href='/zone1';" value="Zone 1"/> <input type="button"
+                                                                                    onclick="location.href='/zone2';"
+                                                                                    value="Zone 2"/> <input
+            type="button" onclick="location.href='/zone3';" value="Zone 3"/></pre>
     <hr>
     <br>
 
@@ -87,7 +96,6 @@
         <br>
         <button onClick="submitTask1Name();">Submit</button>
     </div>
-
 
 
     <!--Why this not do anything?-->
@@ -109,6 +117,9 @@
         getModes();
         getFanSettings();
     }
+
+
+
 
 </script>
 </body>

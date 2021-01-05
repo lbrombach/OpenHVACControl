@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <title>Zone 2</title>
+</head>
+<body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="commonFun.js"></script>
+
+<h2>
+    <pre>      OpenHVACControl - Zone 2</pre>
+    <hr>
+</h2>
+
+<div>
+    <h3>
+        Zone 1  &nbsp&nbsp:  <textarea id="#ZONE2ALIAS"></textarea>
+        <br>
+        Mode    &nbsp&nbsp&nbsp&nbsp: <textarea id="#ZONE2MODE"></textarea>&nbsp
+        Select: <button onClick="setMode(2, 'HEAT');">HEAT</button>
+        <button onClick="setMode(2, 'COOL');">COOL</button>
+        <button onClick="setMode(2, 'OFF');">OFF </button>
+        <br>
+        Temp  &nbsp&nbsp&nbsp&nbsp&nbsp:  <textarea id="#ZONE2USINGTEMP"></textarea>
+        <br>
+        Setpoint :  <textarea id="#ZONE2SETPOINT"></textarea>   <button onClick="increaseSP(2);">&nbsp;Up&nbsp;</button> <button onClick="decreaseSP(2);">Down</button>
+        <br>
+        Fan &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:  <textarea id="#ZONE2FAN"></textarea> <button onClick="toggleFanOnAuto(2);">&nbsp;Auto/On</button>
+    </h3>
+</div>
+
+<hr>
+<input type="button" onclick="location.href='/';" value="Home"/>&nbsp
+<input type="button" onclick="location.href='/zone1';" value="Zone 1"/>&nbsp
+<input type="button" onclick="location.href='/zone2';" value="Zone 2"/>&nbsp
+<input type="button" onclick="location.href='/zone3';" value="Zone 3"/>
+<hr>
+
+<script type="text/javascript">
+
+    var update_loop = setInterval(Update, 2000);
+
+    function Update(){
+        getAliases();
+        getTemps();
+        getSetpoints();
+        getModes();
+        getFanSettings();
+    }
+
+</script>
+
+</body>
+</html>
+</title>
+</head>
+<body>
+
+</body>
+</html>

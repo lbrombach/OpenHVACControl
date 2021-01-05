@@ -79,6 +79,11 @@ previous experience with a RESTful API project used MYSQL and I had to figure ou
 forth without calling the database. I think that could certainly be better, and some refactoring is needed there as
 well.
 
+## Hardware/wiring
+
+Please see the wiki for more about the hardware used and wiring diagrams
+https://github.com/lbrombach/OpenHVACControl/wiki/Hardware-and-Wiring
+
 ## Installation/usage:
 
 Please see the wiki for wiring diagrams, photos, setup, and operating instructions.
