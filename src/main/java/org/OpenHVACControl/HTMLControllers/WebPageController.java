@@ -12,6 +12,15 @@ public class WebPageController {
         return  "index.html";
     }
 
+    @RequestMapping("/zone1")
+    public String getZone1() { return "zone1.html";}
+
+    @RequestMapping("/zone2")
+    public String getZone2() { return "zone2.html";}
+
+    @RequestMapping("/zone3")
+    public String getZone3() { return "zone3.html";}
+
     @RequestMapping("/settings")
     public String getSettings(){
         return  "settings.html";
