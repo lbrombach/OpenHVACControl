@@ -186,14 +186,14 @@ public class Zone {
 
         try {
             ZoneUtils.getSensorData(primaryTempSensor, secondaryTempSensor, temps, usingSecondarySensor);
-            if (temps.get(Temps.PROCESS_TEMP) == -999) {
+            if (temps.get(Temps.PROCESS_TEMP) == -999 || temps.get(Temps.PROCESS_TEMP) == 185) {
                 throw new Exception("INVALID SENSOR DATA in Zone.getRequest() " + name);
             }
             lastValidSensorRead = System.currentTimeMillis();
         } catch (Exception e) {
+            //add email, text, or alert zone problem here
             mode = Mode.OFF;
             System.out.println(e.getMessage() + "Setting zone mode to OFF internally");
-            //add email, text, or alert sensor problem here
         }
 
 
