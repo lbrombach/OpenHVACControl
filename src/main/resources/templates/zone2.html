@@ -2,15 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><!DOCTYPE html>
-        <html lang="en">
-        <head>
-        <meta charset="UTF-8">
-        <title>Zone 2</title>
+    <title>Zone 1</title>
 </head>
 <body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="commonFun.js"></script>
+<script src="commonZoneFun.js"></script>
 
 <h2>
     <pre>      OpenHVACControl - Zone 2</pre>
@@ -19,113 +15,44 @@
 
 <div>
     <h3>
-        Zone 1  &nbsp&nbsp:  <textarea id="#ZONE2ALIAS"></textarea>
+        Zone 2 &nbsp&nbsp: <textarea id="#ZONEALIAS" style="font-size:12pt; height:25px; width:150px;"></textarea>
+        &nbspSelect:
         <br>
-        Mode    &nbsp&nbsp&nbsp&nbsp: <textarea id="#ZONE2MODE"></textarea>&nbsp
-        Select: <button onClick="setMode(2, 'HEAT');">HEAT</button>
-        <button onClick="setMode(2, 'COOL');">COOL</button>
-        <button onClick="setMode(2, 'OFF');">OFF </button>
+        Mode &nbsp&nbsp&nbsp&nbsp: <textarea id="#ZONEMODE" style="font-size:12pt; height:25px; width:150px;"></textarea>&nbsp
+        <button onClick="setMode(2, 'HEAT');" style="font-size:12pt; height:25px; width:100px;">HEAT</button>
+        <button onClick="setMode(2, 'COOL');" style="font-size:12pt; height:25px; width:100px;">COOL</button>
+        <button onClick="setMode(2, 'OFF');" style="font-size:12pt; height:25px; width:100px;">OFF</button>
         <br>
-        Temp  &nbsp&nbsp&nbsp&nbsp&nbsp:  <textarea id="#ZONE2USINGTEMP"></textarea>
+        Temp &nbsp&nbsp&nbsp&nbsp&nbsp: <textarea id="#ZONEUSINGTEMP" style="font-size:12pt; height:25px; width:150px;"></textarea>
         <br>
-        Setpoint :  <textarea id="#ZONE2SETPOINT"></textarea>   <button onClick="increaseSP(2);">&nbsp;Up&nbsp;</button> <button onClick="decreaseSP(2);">Down</button>
+        Setpoint : <textarea id="#ZONESETPOINT" style="font-size:12pt; height:25px; width:150px;"></textarea>
+        <button onClick="increaseSP(2);" style="font-size:12pt; height:25px; width:100px;">&nbsp;Up&nbsp;</button>
+        <button onClick="decreaseSP(2);" style="font-size:12pt; height:25px; width:100px;">Down</button>
         <br>
-        Fan &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:  <textarea id="#ZONE2FAN"></textarea> <button onClick="toggleFanOnAuto(2);">&nbsp;Auto/On</button>
+        Fan &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: <textarea id="#ZONEFAN" style="font-size:12pt; height:25px; width:150px;"></textarea>
+        <button onClick="toggleFanOnAuto(2);" style="font-size:12pt; height:25px; width:100px;">&nbsp;Auto/On</button>
+        <br>
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <textarea id="#OCCUPANCY" style="font-size:12pt; height:25px; width:150px;"></textarea>
+        <button onClick="setOccupancy(2, true);" style="font-size:12pt; height:25px; width:150px;">&nbsp;OCCUPIED</button>
+        <button onClick="setOccupancy(2, false);" style="font-size:12pt; height:25px; width:150px;">&nbsp;UNOCCUPIED</button>
     </h3>
 </div>
 
 <hr>
-<input type="button" onclick="location.href='/';" value="Home"/>&nbsp
-<input type="button" onclick="location.href='/zone1';" value="Zone 1"/>&nbsp
-<input type="button" onclick="location.href='/zone2';" value="Zone 2"/>&nbsp
-<input type="button" onclick="location.href='/zone3';" value="Zone 3"/>
+<input type="button" onclick="location.href='/';" value="Home" style="font-size:12pt; height:25px; width:100px;"/>&nbsp
+<input type="button" onclick="location.href='/zone1';" value="Zone 1" style="font-size:12pt; height:25px; width:100px;"/>&nbsp
+<input type="button" onclick="location.href='/zone2';" value="Zone 2" style="font-size:12pt; height:25px; width:100px;"/>&nbsp
+<input type="button" onclick="location.href='/zone3';" value="Zone 3" style="font-size:12pt; height:25px; width:100px;"/>
 <hr>
 
 <script type="text/javascript">
+    $( document ).ready(function() {
+        getSettings(2);
+    });
 
-    var update_loop = setInterval(Update, 2000);
+    var update_loop = setInterval(getSettings(2), 2000);
 
-    function Update(){
-        getAlias();
-        getTemp();
-        getSetpoint();
-        getMode();
-        getFanSetting();
-    }
-    
-    function getAlias(){
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: '/zonedata/aliases',
-            success: function(data){
-                document.getElementById("#ZONE2ALIAS").innerHTML = data[1];
-            },
-            error: function(){
-                console.log("Error Failed To Retrieve Alias Data");
-            }
-        });
-    }
-    
-    function getTemp(){
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: '/temps',
-            success: function(data){
-                document.getElementById("#ZONE2USINGTEMP").innerHTML = data[7];
-            },
-            error: function(){console.log("Error Failed To Retrieve Temperature Data");}
-        });
-    }    
-
-    function getSetpoint(){
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: '/setpoints',
-            success: function(data){
-                document.getElementById("#ZONE2SETPOINT").innerHTML = data[1];
-            },
-            error: function(){console.log("Error Failed To Retrieve Setpoint Data");}
-        });
-    }
-    
-    function getMode(){
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: '/zonedata/modes',
-            success: function(data){
-                document.getElementById("#ZONE2MODE").innerHTML = data[1];
-            },
-            error: function(){
-                console.log("Error Failed To Retrieve Mode Data");
-            }
-        });
-    }    
-
-
-    function getFanSetting(){
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: '/zonedata/fans',
-            success: function(data){
-                document.getElementById("#ZONE2FAN").innerHTML = (data[1] == true) ? "ON":"AUTO";
-            },
-            error: function(){
-                console.log("Error Failed To Retrieve Fan Data");
-            }
-        });
-    }
 </script>
-
-</body>
-</html>
-</title>
-</head>
-<body>
 
 </body>
 </html>

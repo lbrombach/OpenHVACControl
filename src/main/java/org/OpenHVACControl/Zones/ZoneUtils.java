@@ -1,6 +1,5 @@
 package org.OpenHVACControl.Zones;
 
-import org.OpenHVACControl.ControllerService.SetpointsControllerService;
 import org.OpenHVACControl.Sensors.TempSensor;
 
 import java.util.HashMap;
@@ -32,36 +31,6 @@ class ZoneUtils {
         }
     }
 
-
-    /**
-     * Checks with the front end in case user has changed setpoints
-     * @param name : the name of the zone
-     * @param temps : the zone's hashmap of temperature values
-     */
-    static void updateSetpoints(String name, HashMap<Zone.Temps, Integer> temps){
-        List<Integer> setpoints = SetpointsControllerService.getSetpoints();
-        int newOccupiedSP = -999;
-        int newUnoccupiedSP = -999;
-        switch (name){
-            case "zone1":
-                newOccupiedSP = setpoints.get(0);
-                newUnoccupiedSP = setpoints.get(3);
-                break;
-            case "zone2":
-                newOccupiedSP = setpoints.get(1);
-                newUnoccupiedSP = setpoints.get(4);
-                break;
-            case "zone3":
-                newOccupiedSP = setpoints.get(2);
-                newUnoccupiedSP = setpoints.get(5);
-                break;
-        }
-
-        temps.replace(Zone.Temps.OCCUPIED_SP_HEAT, newOccupiedSP);
-        temps.replace(Zone.Temps.OCCUPIED_SP_COOL, newOccupiedSP);
-        temps.replace(Zone.Temps.UNOCCUPIED_SP_HEAT, newUnoccupiedSP);
-        temps.replace(Zone.Temps.UNOCCUPIED_SP_COOL, newUnoccupiedSP);
-    }
 
     /**
      * The process setpoint is the setpoint the system will use to calculates how many stages to request.

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zone Setup</title>
+</head>
+<body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="commonFun.js"></script>
+
+<h2>
+    <pre>Zone Setup</pre>
+    <hr>
+</h2>
+
+<div>
+    <h3><pre>
+     Load existing zone data:<br>
+     <button onClick="getSettings(1);">Zone1</button> <button onClick="getSettings(2);">Zone2</button> <button
+            onClick="getSettings(3);">Zone3</button>
+     Zone <textarea cols="2" style="font-size: 16pt; height:30px;" id="#ZONENUM"></textarea> Loaded
+    </pre>
+
+        <br><br>
+        **Data below this line will be applied when submitting**
+        <hr>
+
+        <pre>
+                                Loaded Data:            Enter New Data:
+    ALIAS                     : <textarea id="#ZONEALIAS"
+                                          style="font-size:14pt;height:30px;width:200px;padding-bottom: 0px;"></textarea> <input
+                type="text" style="font-size:14pt;height:30px;width:200px;padding-top: 10px;" id="#ZONE_ALIAS" value="">
+
+    <h3>   Set default setpoints:</h3>
+    HEATING OCCUPIED          : <textarea id="#OCCUPIEDHEAT"
+                                          style="font-size:14pt;height:30px;width:200px;padding-bottom: 0px;"></textarea> <input
+                type="text" style="font-size:14pt;height:30px;width:200px;padding-top: 10px;" id="#OCCUPIED_HEAT"
+                value=""><br>
+    HEATING UNOCCUPIED        : <textarea id="#UNOCCUPIEDHEAT"
+                                          style="font-size:14pt;height:30px;width:200px;padding-bottom: 0px;"></textarea> <input
+                type="text" style="font-size:14pt;height:30px;width:200px;padding-top: 10px;" id="#UNOCCUPIED_HEAT"
+                value=""><br>
+    COOLING OCCUPIED          : <textarea id="#OCCUPIEDCOOL"
+                                          style="font-size:14pt;height:30px;width:200px;padding-bottom: 0px;"></textarea> <input
+                type="text" style="font-size:14pt;height:30px;width:200px;padding-top: 10px;" id="#OCCUPIED_COOL"
+                value=""><br>
+    COOLING UNOCCUPIED        : <textarea id="#UNOCCUPIEDCOOL"
+                                          style="font-size:14pt;height:30px;width:200px;padding-bottom: 0px;"></textarea> <input
+                type="text" style="font-size:14pt;height:30px;width:200px;padding-top: 10px;" id="#UNOCCUPIED_COOL"
+                value=""><br>
+    <br><br>
+    The differentials below are compared to the setpoint to decide when stages of heating or cooling turn on. For
+    example: If the current setpoint in a zone is 70 and the First Stage Differential is set to 1, first stage will
+    be turned on when the temperature reaches 69 or 71 (depending on the mode - HEAT or COOL). A First Stage
+    Differential of 2 means the heating or cooling won't be turned on until the temperature reaches 68 or 72. The
+    Differentials MUST be whole numbers. Recommend 1 or 2 for first stage, and 2 or 3 for second stage.
+    <br>
+
+    First Stage Differential  : <textarea id="#FIRSTSTAGEDIFF"
+                                          style="font-size:14pt;height:30px;width:200px;padding-bottom: 0px;"></textarea> <input
+                type="text" style="font-size:14pt;height:30px;width:200px;padding-top: 10px;" id="#FIRST_STAGE_DIFF"
+                value=""><br>
+    Second Stage Differential : <textarea id="#SECONDSTAGEDIFF"
+                                          style="font-size:14pt;height:30px;width:200px;padding-bottom: 0px;"></textarea> <input
+                type="text" style="font-size:14pt;height:30px;width:200px;padding-top: 10px;" id="#SECOND_STAGE_DIFF"
+                value=""><br>
+
+
+    </pre>
+    </h3>
+    <H2>Save and apply these settings to:
+        <button onClick="submit(1);">Apply to Zone1</button>
+        <button onClick="submit(2);">Apply to Zone2</button>
+        <button onClick="submit(3);">Apply to Zone3</button>
+    </H2>
+    <br>
+</div>
+
+<hr>
+<pre>    <input type="button" onclick="location.href='/';" value="Home"/></pre>
+<hr>
+
+<script type="text/javascript">
+
+    function validate(zoneData){
+        if(zoneData.alias === "" ||
+            zoneData.OCCUPIEDHEAT === "" ||
+            zoneData.UNOCCUPIEDHEAT === "" ||
+            zoneData.OCCUPIEDCOOL === "" ||
+            zoneData.UNOCCUPIEDCOOL === "" ||
+            zoneData.FIRST_STAGE_DIFF === "" ||
+            zoneData.SECOND_STAGE_DIFF === "" ){
+            alert("All fields must be filled out");
+            return false;
+        }
+        if(isNaN(parseInt(zoneData.OCCUPIEDHEAT))      ||
+            isNaN(parseInt(zoneData.UNOCCUPIEDHEAT))   ||
+            isNaN(parseInt(zoneData.OCCUPIEDCOOL))     ||
+            isNaN(parseInt(zoneData.UNOCCUPIEDCOOL))   ||
+            isNaN(parseInt(zoneData.FIRST_STAGE_DIFF)) ||
+            isNaN(parseInt(zoneData.SECOND_STAGE_DIFF)) ){
+            alert("Make sure number fields contain only numbers");
+            return false;
+        }
+        return true;
+    }
+
+    function submit(zoneNum){
+
+        var zoneData = {
+            name: "zone" + zoneNum,
+            alias: document.getElementById("#ZONE_ALIAS").value,
+            OCCUPIEDHEAT: document.getElementById("#OCCUPIED_HEAT").value,
+            UNOCCUPIEDHEAT: document.getElementById("#UNOCCUPIED_HEAT").value,
+            OCCUPIEDCOOL: document.getElementById("#OCCUPIED_COOL").value,
+            UNOCCUPIEDCOOL: document.getElementById("#UNOCCUPIED_COOL").value,
+            FIRST_STAGE_DIFF: document.getElementById("#FIRST_STAGE_DIFF").value,
+            SECOND_STAGE_DIFF: document.getElementById("#SECOND_STAGE_DIFF").value,
+        };
+
+        //assert all fields filled out
+        if(validate(zoneData) == false){
+            return;
+        }
+
+        //assert second stage diff > first stage else alert
+        var FIRST_STAGE_DIFF = document.getElementById("#FIRST_STAGE_DIFF").value;
+        var SECOND_STAGE_DIFF = document.getElementById("#SECOND_STAGE_DIFF").value;
+        if(SECOND_STAGE_DIFF < FIRST_STAGE_DIFF){
+            alert("Second stage differential cannot be less than the first stage differential!");
+            return;
+        }
+
+        var zoneData = {
+            name: "zone" + zoneNum,
+            alias: document.getElementById("#ZONE_ALIAS").value,
+            OCCUPIEDHEAT: document.getElementById("#OCCUPIED_HEAT").value,
+            UNOCCUPIEDHEAT: document.getElementById("#UNOCCUPIED_HEAT").value,
+            OCCUPIEDCOOL: document.getElementById("#OCCUPIED_COOL").value,
+            UNOCCUPIEDCOOL: document.getElementById("#UNOCCUPIED_COOL").value,
+            FIRST_STAGE_DIFF: document.getElementById("#FIRST_STAGE_DIFF").value,
+            SECOND_STAGE_DIFF: document.getElementById("#SECOND_STAGE_DIFF").value,
+        };
+
+        if (confirm("Confirm that \"" + zoneData.alias + "\" is the correct alias for " + zoneData.name)){
+            var query = '/zonedata/applysettings/'+JSON.stringify(zoneData);
+            console.log(query);
+            $.ajax({
+            type: 'PUT',
+            dataType: 'text',
+            url: query,
+            success: function(){
+                alert("Settings saved!");
+            },
+            error: function(){
+                alert("Data has NOT been set");
+            }
+        });
+        }else{
+            alert("Data has NOT been set");
+        }
+    }
+
+
+        function getSettings(zoneNum){
+        document.getElementById("#ZONENUM").innerHTML = zoneNum;
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/zonedata/zonesettings/'+zoneNum,
+            success: function(data){
+                document.getElementById("#ZONEALIAS").innerHTML = data.alias;
+                document.getElementById("#OCCUPIEDHEAT").innerHTML = data.OCCUPIEDHEAT;
+                document.getElementById("#UNOCCUPIEDHEAT").innerHTML = data.UNOCCUPIEDHEAT;
+                document.getElementById("#OCCUPIEDCOOL").innerHTML = data.OCCUPIEDCOOL;
+                document.getElementById("#UNOCCUPIEDCOOL").innerHTML = data.UNOCCUPIEDCOOL;
+                document.getElementById("#FIRSTSTAGEDIFF").innerHTML = data.FIRST_STAGE_DIFF;
+                document.getElementById("#SECONDSTAGEDIFF").innerHTML = data.SECOND_STAGE_DIFF;
+            },
+            error: function(){
+                console.log("Error Failed To Retrieve settings Data");
+            }
+        });
+    }
+
+
+
+
+</script>
+
+</body>
+</html>

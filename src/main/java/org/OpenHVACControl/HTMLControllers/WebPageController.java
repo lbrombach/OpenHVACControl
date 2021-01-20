@@ -26,14 +26,24 @@ public class WebPageController {
         return  "settings.html";
     }
 
+    @RequestMapping("/zonesettings")
+    public String getZoneSettings(){
+        return  "zonesettings.html";
+    }
+
     @RequestMapping("/sensorSetup")
     public String getSensorsSetup(){
         return  "sensorSetup.html";
     }
-    
+
     @RequestMapping("/commonFun.js")
     public String getCommonFun(){
         return  "commonFun.js";
+    }
+
+    @RequestMapping("/commonZoneFun.js")
+    public String getcommonZoneFun(){
+        return  "commonZoneFun.js";
     }
 
 }

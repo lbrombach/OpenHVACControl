@@ -71,14 +71,14 @@ public class Zone {
         this.name = name;
         if (name.equals("zone1")) {
             this.alias = "Main Floor";
-            damper = new Damper(ZONE_1_DAMPER_PIN, gpio);
+         //   damper = new Damper(ZONE_1_DAMPER_PIN);
 
         } else if (name.equals("zone2")) {
             this.alias = "Upper Floor";
-            damper = new Damper(ZONE_2_DAMPER_PIN, gpio);
+          //  damper = new Damper(ZONE_2_DAMPER_PIN, gpio);
         } else {
             this.alias = "Basement";
-            damper = new Damper(ZONE_3_DAMPER_PIN, gpio);
+         //   damper = new Damper(ZONE_3_DAMPER_PIN, gpio);
         }
         try {
             primaryTempSensor = new TempSensor(name + "Primary");
@@ -96,7 +96,7 @@ public class Zone {
         }
         mode = Mode.HEAT;
         secondaryIsPrimaryTime = 30;
-        temps.put(Temps.PROCESS_TEMP, -999);
+        temps.put(Temps.PROCESS_TEMP, 70);
         temps.put(Temps.PROCESS_SP, 70);
         temps.put(Temps.OCCUPIED_SP_HEAT, 70);
         temps.put(Temps.OCCUPIED_SP_COOL, 70);
@@ -124,12 +124,12 @@ public class Zone {
 
             for (int i = 0; i < zones.size() && isMatch == false; i++) {
                 if (zones.get(i).name.contains(this.name)) {
-                    System.out.println("Got zone match for " + this.name + "process temp = " + zones.get(i).temps.get(Temps.PROCESS_SP));
+                    System.out.println("Got zone match for " + this.name);
                     this.name = zones.get(i).name;
                     this.alias = zones.get(i).alias;
                     this.mode = zones.get(i).mode;
                     this.secondaryIsPrimaryTime = zones.get(i).secondaryIsPrimaryTime;
-                    temps.put(Temps.PROCESS_TEMP, -999);
+                    temps.put(Temps.PROCESS_TEMP, 70);
                     temps.put(Temps.PROCESS_SP, zones.get(i).temps.get(Temps.PROCESS_SP));
                     temps.put(Temps.OCCUPIED_SP_HEAT, zones.get(i).temps.get(Temps.OCCUPIED_SP_HEAT));
                     temps.put(Temps.OCCUPIED_SP_COOL, zones.get(i).temps.get(Temps.OCCUPIED_SP_COOL));
@@ -164,7 +164,7 @@ public class Zone {
                 } catch (InactiveSensorException e) {
                     usingSecondarySensor = false;
                 }
-                damper = new Damper(damperPin, gpio);
+               // damper = new Damper(damperPin, gpio);
                 request = new Request();
             }
         }
@@ -181,21 +181,28 @@ public class Zone {
      * @return : the zone's updated request object
      */
     public Request getRequest() {
-        ZoneUtils.updateSetpoints(name, temps);
+ //       ZoneUtils.updateSetpoints(name, temps);
         temps.replace(Temps.PROCESS_SP, ZoneUtils.getProcessSetpoint(mode, temps, isOccupied));
+        System.out.println(this.name + " process SP = "+ temps.get(Temps.PROCESS_SP) + " Mode is : "+ mode + " and isOccupied = " + isOccupied);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
+/*
         try {
             ZoneUtils.getSensorData(primaryTempSensor, secondaryTempSensor, temps, usingSecondarySensor);
-            if (temps.get(Temps.PROCESS_TEMP) == -999) {
+            if (temps.get(Temps.PROCESS_TEMP) == -999 || temps.get(Temps.PROCESS_TEMP) == 185) {
                 throw new Exception("INVALID SENSOR DATA in Zone.getRequest() " + name);
             }
             lastValidSensorRead = System.currentTimeMillis();
         } catch (Exception e) {
+            //add email, text, or alert zone problem here
             mode = Mode.OFF;
             System.out.println(e.getMessage() + "Setting zone mode to OFF internally");
-            //add email, text, or alert sensor problem here
         }
-
+*/
 
         int stages = 0;
         switch (mode) {

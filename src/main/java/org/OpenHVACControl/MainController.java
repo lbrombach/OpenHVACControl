@@ -2,10 +2,9 @@ package org.OpenHVACControl;
 
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
-import org.OpenHVACControl.ControllerService.SetpointsControllerService;
+import org.OpenHVACControl.ControllerService.OutputsControllerService;
 import org.OpenHVACControl.ControllerService.TempsControllerService;
 import org.OpenHVACControl.ControllerService.ZoneDataControllerService;
-import org.OpenHVACControl.ControllerService.OutputsControllerService;
 import org.OpenHVACControl.Zones.Request;
 import org.OpenHVACControl.Zones.Zone;
 import org.OpenHVACControl.hardware.CallsToSystem;
@@ -51,21 +50,29 @@ public class MainController {
         }
 
         //update aliases and modes TO the front end. Initialize with this only once.
-        ZoneDataControllerService.sendZoneDatatoFrontEnd(zones);
-        SetpointsControllerService.initializeSetpoints(zones);
+        ZoneDataControllerService.setZoneSettings(zones);
 
         //main control loop. Decides what the system should be doing and enable only the dampers that should be
         while (true) {
-            System.out.println();
-
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             //send relay state data to front end for display
             OutputsControllerService.setOutputs(CallsToSystem.getRelayStates(), zones);
 
-            //update setpoints with latest FROM front end
-            MainControllerUtils.updateFromFrontEnd(SetpointsControllerService.getSetpoints(),
-                    ZoneDataControllerService.getModes(),
-                    ZoneDataControllerService.getFanRequests(),
-                    zones);
+
+
+            if (ZoneDataControllerService.getHasChanged()){
+                ZoneDataControllerService.updateZoneSettings(zones);
+                if(ZoneDataControllerService.getNeedsSave()){
+                    MainControllerUtils.saveZoneJson(zones);
+                    ZoneDataControllerService.resetNeedsSave();
+                }
+                ZoneDataControllerService.resetHasChanged();
+            }
+
 
             //totalize requests from all zones int one request object (this also gets new temps from sensors)
             List<Request> allRequests = MainControllerUtils.getAllRequests(zones);
@@ -121,16 +128,7 @@ public class MainController {
         }
 
 
-/*
-           try (Writer outFile = new FileWriter("src/main/resources/zones.json")) {
-                Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-                gson.toJson(zones, outFile);
-                outFile.close();
-            }
-            catch (Exception e){
-                System.out.println(e.getMessage());
-            }
-*/
+
 
     }
 

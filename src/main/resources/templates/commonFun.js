@@ -16,7 +16,9 @@
         document.getElementById("#ZONE3FAN").innerHTML = (data[2] == true) ? "ON":"AUTO";
     }
 
-
+    function checkTemp(temp){
+        return (temp == -999) ? " -- ":temp;
+    }
 
     function showTemps(data){
         document.getElementById("#ZONE1TEMP1").innerHTML = (data[0] == -999) ? " -- ":data[0];
@@ -31,9 +33,9 @@
     }
 
     function showSetpoints(data){
-        document.getElementById("#ZONE1SETPOINT").innerHTML = data[0];
-        document.getElementById("#ZONE2SETPOINT").innerHTML = data[1];
-        document.getElementById("#ZONE3SETPOINT").innerHTML = data[2];
+        document.getElementById("#ZONE1SETPOINT").innerHTML = checkTemp(data[0]);
+        document.getElementById("#ZONE2SETPOINT").innerHTML = checkTemp(data[1]);
+        document.getElementById("#ZONE3SETPOINT").innerHTML = checkTemp(data[2]);
     }
 
 
@@ -141,6 +143,7 @@
     function setMode(zoneNum, newMode){
         console.log("zone " + zoneNum + " to " + newMode);
         let queryString = '/zonedata/modes/' + zoneNum + '/' + newMode;
+        console.log(queryString);
         $.ajax({
             type: 'PUT',
             url: queryString,
@@ -164,9 +167,23 @@
         });
     }
 
+    function setSP(zoneNum, newSP){
+            let queryString = '/setpoints/set/' + zoneNum;
+            console.log(queryString);
+            $.ajax({
+            type: 'PUT',
+            url: queryString,
+            success: function(data){
+                console.log("Setpoint " + zoneNum + " ");
+                updateSetpoint(zoneNum, data);
+            },
+            error: function(){alert("Error failed to change setpoint");}
+        });
+    }
+
     function increaseSP(zoneNum){
             let queryString = '/setpoints/increase/' + zoneNum;
-            console.log
+            console.log(queryString);
             $.ajax({
             type: 'PUT',
             url: queryString,
@@ -191,6 +208,8 @@
         });
     }
 
+
+
     function updateSetpoint(zoneNum, data){
         if(zoneNum == 1){
             document.getElementById("#ZONE1SETPOINT").innerHTML = data;
@@ -203,8 +222,10 @@
         }
     }
 
-                //this is what works in postman: to delete users from DB:
-                //localhost:8080/user?emailAddress=example@wayne.edu
+
+
+    //this is what works in postman: to delete users from DB:
+    //localhost:8080/user?emailAddress=example@wayne.edu
 
     function submitTask1Name(input){
         let newName = document.getElementById("TASK1NEW_NAME").value;

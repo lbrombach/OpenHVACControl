@@ -1,10 +1,14 @@
 package org.OpenHVACControl;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.pi4j.io.gpio.Pin;
 import org.OpenHVACControl.Zones.Request;
 import org.OpenHVACControl.Zones.Zone;
 import org.OpenHVACControl.hardware.GPIOControl;
 
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,30 +65,7 @@ public class MainControllerUtils {
      * @param fansRequests : a list of fan on/auto settings user has each zone set to
      * @param zones : a list of Zone objects the system is managing
      */
-    public static void updateFromFrontEnd(List<Integer> setpoints, List<String> modes,
-                                          List<Boolean> fansRequests, List<Zone> zones) {
-        for (int i = 0; i < zones.size(); i++) {
-            zones.get(i).setTemp(Zone.Temps.OCCUPIED_SP_HEAT, setpoints.get(i));
-            zones.get(i).setTemp(Zone.Temps.OCCUPIED_SP_COOL, setpoints.get(i));
-            zones.get(i).setTemp(Zone.Temps.UNOCCUPIED_SP_HEAT, setpoints.get(i + 3));
-            zones.get(i).setTemp(Zone.Temps.UNOCCUPIED_SP_COOL, setpoints.get(i + 3));
 
-            zones.get(i).setFanRequest(fansRequests.get(i));
-
-            switch (modes.get(i)) {
-                case "HEAT":
-                    zones.get(i).setMode(Zone.Mode.HEAT);
-                    break;
-
-                case "COOL":
-                    zones.get(i).setMode(Zone.Mode.COOL);
-                    break;
-
-                case "OFF":
-                    zones.get(i).setMode(Zone.Mode.OFF);
-            }
-        }
-    }
 
     /**
      * Called once during startup. Passes pin assignments and gpio control object
@@ -130,6 +111,19 @@ public class MainControllerUtils {
         for (int i = 0; i < zones.size(); i++) {
             if (zones.get(i).getName().equals("Error"))
                 return false;
+        }
+        return true;
+    }
+
+    public static boolean saveZoneJson(List<Zone> zones){
+        try (Writer outFile = new FileWriter("src/main/resources/zones.json")) {
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            gson.toJson(zones, outFile);
+            outFile.close();
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return false;
         }
         return true;
     }
