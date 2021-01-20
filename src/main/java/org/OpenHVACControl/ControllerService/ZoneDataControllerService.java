@@ -316,6 +316,12 @@ public class ZoneDataControllerService {
      */
     public static synchronized void updateZoneSettings(List<Zone> zones){
         for(int i =0; i<zones.size();i++){
+            //get sensor data from back end while we're here
+            zoneSettings.get(i).PRIMARYTEMP =  Integer.toString(zones.get(i).getTemp(Zone.Temps.CURRENT_PRIMARY_TEMP));
+            zoneSettings.get(i).SECONDARYTEMP =  Integer.toString(zones.get(i).getTemp(Zone.Temps.CURRENT_SECONDARY_TEMP));
+            zoneSettings.get(i).PROCESSTEMP =  Integer.toString(zones.get(i).getTemp(Zone.Temps.PROCESS_TEMP));            
+            
+            //get zone settings from front end
             zones.get(i).setAlias(zoneSettings.get(i).alias);
             zones.get(i).setTemp(Zone.Temps.OCCUPIED_SP_HEAT, Integer.parseInt(zoneSettings.get(i).OCCUPIEDHEAT));
             zones.get(i).setTemp(Zone.Temps.UNOCCUPIED_SP_HEAT, Integer.parseInt(zoneSettings.get(i).UNOCCUPIEDHEAT));

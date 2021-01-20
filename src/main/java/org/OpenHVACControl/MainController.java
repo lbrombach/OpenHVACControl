@@ -64,14 +64,12 @@ public class MainController {
 
 
 
-            if (ZoneDataControllerService.getHasChanged()){
-                ZoneDataControllerService.updateZoneSettings(zones);
-                if(ZoneDataControllerService.getNeedsSave()){
-                    MainControllerUtils.saveZoneJson(zones);
-                    ZoneDataControllerService.resetNeedsSave();
-                }
-                ZoneDataControllerService.resetHasChanged();
+            ZoneDataControllerService.updateZoneSettings(zones);
+            if(ZoneDataControllerService.getNeedsSave()){
+                MainControllerUtils.saveZoneJson(zones);
+                ZoneDataControllerService.resetNeedsSave();
             }
+            
 
 
             //totalize requests from all zones int one request object (this also gets new temps from sensors)

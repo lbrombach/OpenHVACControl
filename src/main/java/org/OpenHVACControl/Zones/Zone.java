@@ -71,14 +71,14 @@ public class Zone {
         this.name = name;
         if (name.equals("zone1")) {
             this.alias = "Main Floor";
-         //   damper = new Damper(ZONE_1_DAMPER_PIN);
+            damper = new Damper(ZONE_1_DAMPER_PIN, gpio);
 
         } else if (name.equals("zone2")) {
             this.alias = "Upper Floor";
-          //  damper = new Damper(ZONE_2_DAMPER_PIN, gpio);
+            damper = new Damper(ZONE_2_DAMPER_PIN, gpio);
         } else {
             this.alias = "Basement";
-         //   damper = new Damper(ZONE_3_DAMPER_PIN, gpio);
+            damper = new Damper(ZONE_3_DAMPER_PIN, gpio);
         }
         try {
             primaryTempSensor = new TempSensor(name + "Primary");
@@ -164,7 +164,7 @@ public class Zone {
                 } catch (InactiveSensorException e) {
                     usingSecondarySensor = false;
                 }
-               // damper = new Damper(damperPin, gpio);
+                damper = new Damper(damperPin, gpio);
                 request = new Request();
             }
         }
@@ -181,16 +181,14 @@ public class Zone {
      * @return : the zone's updated request object
      */
     public Request getRequest() {
- //       ZoneUtils.updateSetpoints(name, temps);
         temps.replace(Temps.PROCESS_SP, ZoneUtils.getProcessSetpoint(mode, temps, isOccupied));
-        System.out.println(this.name + " process SP = "+ temps.get(Temps.PROCESS_SP) + " Mode is : "+ mode + " and isOccupied = " + isOccupied);
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-/*
+
         try {
             ZoneUtils.getSensorData(primaryTempSensor, secondaryTempSensor, temps, usingSecondarySensor);
             if (temps.get(Temps.PROCESS_TEMP) == -999 || temps.get(Temps.PROCESS_TEMP) == 185) {
@@ -202,7 +200,6 @@ public class Zone {
             mode = Mode.OFF;
             System.out.println(e.getMessage() + "Setting zone mode to OFF internally");
         }
-*/
 
         int stages = 0;
         switch (mode) {

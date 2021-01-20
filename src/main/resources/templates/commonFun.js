@@ -82,7 +82,7 @@
             success: function(data){
                 showTemps(data);
             },
-            error: function(){alert("Error Failed To Retrieve Temperature Data");}
+            error: function(){console.log("Error Failed To Retrieve Temperature Data");}
         });
     }
 
@@ -94,7 +94,7 @@
             success: function(data){
                 showSetpoints(data);
             },
-            error: function(){alert("Error Failed To Retrieve Setpoint Data");}
+            error: function(){console.log("Error Failed To Retrieve Setpoint Data");}
         });
     }
 
@@ -151,7 +151,7 @@
                 console.log("Mode " + zoneNum + " changed to " + newMode);
                 getModes();
             },
-            error: function(){alert("Error failed to change mode");}
+            error: function(){console.log("Error failed to change mode");}
         });
     }
 
@@ -163,7 +163,7 @@
             success: function(){
                 getFanSettings();
             },
-            error: function(){alert("Error failed to change fan setting");}
+            error: function(){console.log("Error failed to change fan setting");}
         });
     }
 
@@ -177,7 +177,7 @@
                 console.log("Setpoint " + zoneNum + " ");
                 updateSetpoint(zoneNum, data);
             },
-            error: function(){alert("Error failed to change setpoint");}
+            error: function(){console.log("Error failed to change setpoint");}
         });
     }
 
@@ -191,7 +191,7 @@
                 console.log("Setpoint " + zoneNum + " increased");
                 updateSetpoint(zoneNum, data);
             },
-            error: function(){alert("Error failed to change setpoint");}
+            error: function(){console.log("Error failed to change setpoint");}
         });
     }
 
@@ -204,7 +204,7 @@
                 console.log("Setpoint " + zoneNum + " decreased");
                 updateSetpoint(zoneNum, data);
             },
-            error: function(){alert("Error failed to change setpoint");}
+            error: function(){console.log("Error failed to change setpoint");}
         });
     }
 
