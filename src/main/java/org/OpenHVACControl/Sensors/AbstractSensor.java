@@ -36,12 +36,12 @@ public abstract class AbstractSensor {
 
             for (int i = 0; i < sensors.size() && isMatch == false; i++) {
                 if (sensors.get(i).name.contains(this.name)) {
-                    System.out.println("Got sensor match for " + this.name);
                     this.name = sensors.get(i).name;
                     this.alias = sensors.get(i).alias;
                     this.address = sensors.get(i).address;
                     this.sensorOffset = sensors.get(i).sensorOffset;
                     isMatch = true;
+                    System.out.println("Got sensor match for " + this.name + ".."+this.address + " at " + filePath);
                 }
             }
 

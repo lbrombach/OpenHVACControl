@@ -54,11 +54,7 @@ public class MainController {
 
         //main control loop. Decides what the system should be doing and enable only the dampers that should be
         while (true) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             //send relay state data to front end for display
             OutputsControllerService.setOutputs(CallsToSystem.getRelayStates(), zones);
 
