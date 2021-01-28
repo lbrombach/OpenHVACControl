@@ -6,7 +6,7 @@
 </head>
 <body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="commonZoneFun.js"></script>
+<script src="commonZoneDataFun.js"></script>
 
 <h2>
     <pre>      OpenHVACControl - Zone 3</pre>
@@ -15,24 +15,24 @@
 
 <div>
     <h3>
-        Zone 3 &nbsp&nbsp: <textarea id="#ZONEALIAS" style="font-size:12pt; height:25px; width:150px;"></textarea>
+        Zone 3 &nbsp&nbsp: <textarea id="#ZONE3ALIAS" style="font-size:12pt; height:25px; width:150px;"></textarea>
         &nbspSelect:
         <br>
-        Mode &nbsp&nbsp&nbsp&nbsp: <textarea id="#ZONEMODE" style="font-size:12pt; height:25px; width:150px;"></textarea>&nbsp
+        Mode &nbsp&nbsp&nbsp&nbsp: <textarea id="#ZONE3MODE" style="font-size:12pt; height:25px; width:150px;"></textarea>&nbsp
         <button onClick="setMode(3, 'HEAT');" style="font-size:12pt; height:25px; width:100px;">HEAT</button>
         <button onClick="setMode(3, 'COOL');" style="font-size:12pt; height:25px; width:100px;">COOL</button>
         <button onClick="setMode(3, 'OFF');" style="font-size:12pt; height:25px; width:100px;">OFF</button>
         <br>
-        Temp &nbsp&nbsp&nbsp&nbsp&nbsp: <textarea id="#ZONEUSINGTEMP" style="font-size:12pt; height:25px; width:150px;"></textarea>
+        Temp &nbsp&nbsp&nbsp&nbsp&nbsp: <textarea id="#ZONE3USINGTEMP" style="font-size:12pt; height:25px; width:150px;"></textarea>
         <br>
-        Setpoint : <textarea id="#ZONESETPOINT" style="font-size:12pt; height:25px; width:150px;"></textarea>
+        Setpoint : <textarea id="#ZONE3SETPOINT" style="font-size:12pt; height:25px; width:150px;"></textarea>
         <button onClick="increaseSP(3);" style="font-size:12pt; height:25px; width:100px;">&nbsp;Up&nbsp;</button>
         <button onClick="decreaseSP(3);" style="font-size:12pt; height:25px; width:100px;">Down</button>
         <br>
-        Fan &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: <textarea id="#ZONEFAN" style="font-size:12pt; height:25px; width:150px;"></textarea>
+        Fan &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: <textarea id="#ZONE3FAN" style="font-size:12pt; height:25px; width:150px;"></textarea>
         <button onClick="toggleFanOnAuto(3);" style="font-size:12pt; height:25px; width:100px;">&nbsp;Auto/On</button>
         <br>
-        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <textarea id="#OCCUPANCY" style="font-size:12pt; height:25px; width:150px;"></textarea>
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <textarea id="#ZONE3OCCUPANCY" style="font-size:12pt; height:25px; width:150px;"></textarea>
         <button onClick="setOccupancy(3, true);" style="font-size:12pt; height:25px; width:150px;">&nbsp;OCCUPIED</button>
         <button onClick="setOccupancy(3, false);" style="font-size:12pt; height:25px; width:150px;">&nbsp;UNOCCUPIED</button>
     </h3>
@@ -47,10 +47,10 @@
 
 <script type="text/javascript">
     $( document ).ready(function() {
-        getSettings(3);
+        getZoneData(3);
     });
 
-    var update_loop = setInterval(getSettings(3), 2000);
+    var update_loop = setInterval(getZoneData(3), 2000);
 
 </script>
 

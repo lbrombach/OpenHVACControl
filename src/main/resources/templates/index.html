@@ -12,7 +12,7 @@
 </head>
 <body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="commonFun.js"></script>
+<script src="commonZoneDataFun.js"></script>
 
 <h2>
     <pre>      OpenHVACControl - System Overview</pre>
@@ -29,7 +29,7 @@
                              style="font-size:12pt; height:25px; width:150px;"></textarea>   Temp 2: <textarea
                     id="#ZONE1TEMP2"
                     style="font-size:12pt; height:25px; width:150px;"></textarea>    Using temp:  <textarea
-                    id="#ZONE1USINGTEMP" style="font-size:12pt; height:25px; width:50px;"></textarea>
+                    id="#ZONE1USINGTEMP" style="font-size:12pt; height:25px; width:50px;"></textarea>      <textarea id="#ZONE1OCCUPANCY" style="font-size:12pt; height:25px; width:150px;"></textarea>
         Setpoint:  <textarea id="#ZONE1SETPOINT" style="font-size:12pt; height:25px; width:150px;"></textarea>   <button
                     onClick="increaseSP(1);" style="font-size:12pt; height:25px; width:100px;">&nbsp;Up&nbsp;</button> <button
                     onClick="decreaseSP(1);" style="font-size:12pt; height:25px; width:100px;">Down</button>      Fan       :  <textarea
@@ -51,7 +51,7 @@
                              style="font-size:12pt; height:25px; width:150px;"></textarea>   Temp 2: <textarea
                     id="#ZONE2TEMP2"
                     style="font-size:12pt; height:25px; width:150px;"></textarea>    Using temp:  <textarea
-                    id="#ZONE2USINGTEMP" style="font-size:12pt; height:25px; width:50px;"></textarea>
+                    id="#ZONE2USINGTEMP" style="font-size:12pt; height:25px; width:50px;"></textarea>      <textarea id="#ZONE2OCCUPANCY" style="font-size:12pt; height:25px; width:150px;"></textarea>
         Setpoint:  <textarea id="#ZONE2SETPOINT" style="font-size:12pt; height:25px; width:150px;"></textarea>   <button
                     onClick="increaseSP(2);" style="font-size:12pt; height:25px; width:100px;">&nbsp;Up&nbsp;</button> <button
                     onClick="decreaseSP(2);" style="font-size:12pt; height:25px; width:100px;">Down</button>      Fan       :  <textarea
@@ -73,7 +73,7 @@
                              style="font-size:12pt; height:25px; width:150px;"></textarea>   Temp 2: <textarea
                     id="#ZONE3TEMP2"
                     style="font-size:12pt; height:25px; width:150px;"></textarea>   Using temp:  <textarea
-                    id="#ZONE3USINGTEMP" style="font-size:12pt; height:25px; width:50px;"></textarea>
+                    id="#ZONE3USINGTEMP" style="font-size:12pt; height:25px; width:50px;"></textarea>      <textarea id="#ZONE3OCCUPANCY" style="font-size:12pt; height:25px; width:150px;"></textarea>
         Setpoint:  <textarea id="#ZONE3SETPOINT" style="font-size:12pt; height:25px; width:150px;"></textarea>   <button
                     onClick="increaseSP(3);" style="font-size:12pt; height:25px; width:100px;">&nbsp;Up&nbsp;</button> <button
                     onClick="decreaseSP(3);" style="font-size:12pt; height:25px; width:100px;">Down</button>     Fan       :  <textarea
@@ -131,12 +131,10 @@
     var update_loop = setInterval(Update, 2000);
 
     function Update(){
-        getAliases();
-        getTemps();
-        getSetpoints();
+        getZoneDataForIndex(1);
+        getZoneDataForIndex(2);
+        getZoneDataForIndex(3);
         getOutputs();
-        getModes();
-        getFanSettings();
     }
 
 

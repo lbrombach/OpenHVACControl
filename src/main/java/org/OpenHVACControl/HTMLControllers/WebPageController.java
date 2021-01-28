@@ -2,6 +2,11 @@ package org.OpenHVACControl.HTMLControllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PathVariable;
+import java.io.File;
+import java.util.Scanner;
 
 
 
@@ -14,7 +19,7 @@ public class WebPageController {
 
     @RequestMapping("/zone1")
     public String getZone1() { return "zone1.html";}
-
+    
     @RequestMapping("/zone2")
     public String getZone2() { return "zone2.html";}
 
@@ -36,15 +41,25 @@ public class WebPageController {
         return  "sensorSetup.html";
     }
 
-    @RequestMapping("/commonFun.js")
-    public String getCommonFun(){
-        return  "commonFun.js";
+    @RequestMapping("/commonZoneDataFun.js")
+    public String getCommonZoneDataFun(){
+        return  "commonZoneDataFun.js";
     }
-
-    @RequestMapping("/commonZoneFun.js")
-    public String getcommonZoneFun(){
-        return  "commonZoneFun.js";
-    }
+    
+    
+    @RequestMapping("/zone/{zoneNum}")
+    @ResponseBody
+    public String getZonePage(@PathVariable String zoneNum) {
+        String template = "If you can read this something went wrong. \ndid zone.html get erased?";
+        try{
+            template = String.valueOf(new Scanner(new File("src/main/resources/templates/zone.html")).useDelimiter("\\Z").next());        
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return template; //.replace("XXX", zoneNum);
+    }  
+    
 
 }
 

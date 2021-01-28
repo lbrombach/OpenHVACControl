@@ -105,7 +105,7 @@ public class TempSensor extends AbstractSensor {
             else {logger.lastFailed = false;}             ///////////////////////////////////////////
                
 
-            if(System.currentTimeMillis() - logger.lastLog > 14400000*6){/////////////// 14400000 ms = 4 hours
+            if(System.currentTimeMillis() - logger.lastLog > 14400000*6*7){/////////////// 14400000 ms = 4 hours
                 logger.timestamp = new Timestamp(System.currentTimeMillis()); //////////////////////
                 log(this.name);                                           ///////////////////////////
                 logger = new Logger();                               /////////////////////////////

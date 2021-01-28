@@ -6,7 +6,7 @@
 </head>
 <body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="commonFun.js"></script>
+<script src="commonZoneDataFun.js"></script>
 
 <h2>
     <pre>Zone Setup</pre>
@@ -109,13 +109,13 @@
 
         var zoneData = {
             name: "zone" + zoneNum,
-            alias: document.getElementById("#ZONE_ALIAS").value,
-            OCCUPIEDHEAT: document.getElementById("#OCCUPIED_HEAT").value,
-            UNOCCUPIEDHEAT: document.getElementById("#UNOCCUPIED_HEAT").value,
-            OCCUPIEDCOOL: document.getElementById("#OCCUPIED_COOL").value,
-            UNOCCUPIEDCOOL: document.getElementById("#UNOCCUPIED_COOL").value,
-            FIRST_STAGE_DIFF: document.getElementById("#FIRST_STAGE_DIFF").value,
-            SECOND_STAGE_DIFF: document.getElementById("#SECOND_STAGE_DIFF").value,
+            alias: document.getElementById("#ZONE_ALIAS").value.trim(),
+            OCCUPIEDHEAT: document.getElementById("#OCCUPIED_HEAT").value.trim(),
+            UNOCCUPIEDHEAT: document.getElementById("#UNOCCUPIED_HEAT").value.trim(),
+            OCCUPIEDCOOL: document.getElementById("#OCCUPIED_COOL").value.trim(),
+            UNOCCUPIEDCOOL: document.getElementById("#UNOCCUPIED_COOL").value.trim(),
+            FIRST_STAGE_DIFF: document.getElementById("#FIRST_STAGE_DIFF").value.trim(),
+            SECOND_STAGE_DIFF: document.getElementById("#SECOND_STAGE_DIFF").value.trim(),
         };
 
         //assert all fields filled out
