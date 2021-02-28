@@ -68,22 +68,30 @@ public class TempSensor extends AbstractSensor {
      * @throws Exception : temperature read error
      */
     public float getTemp(){
+
         logger.totalReads ++;//////////////////////////////////////////////////////////////////////////////////
+
         float temp = -999;
         try {
             temp = readSensor();
             temp = temp / 1000.0f * 1.8f + 32.0f;  //temp data comes as millidegrees celsius. Convert to F
+
             if(temp != 185 && temp != -999) {logger.goodFirstReads++;}///////////////////////////////////
+
             
             if(temp == 185 || temp == -999){ //185 indicates error data from reading sensor. -999 more likely sensor cannot be read
                 Thread.sleep(1000);
                 temp = readSensor() / 1000.0f * 1.8f + 32.0f;
+
                 if(temp != 185 && temp != -999) {logger.goodSecondReads++;}///////////////////////////////////
+
             }
             else {
                 lastTempRead = (int) temp;
                 lastReadTime = System.currentTimeMillis();
+
                 
+
             }
         } catch (IOException e) {
             System.out.println("IO exception reading temp? Are you simulating (not on a PI) or is sensor bad?");

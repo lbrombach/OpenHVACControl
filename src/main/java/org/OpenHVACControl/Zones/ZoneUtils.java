@@ -8,35 +8,52 @@ import java.util.List;
 class ZoneUtils {
 
     /**
+     * is the value an error code
+     *
+     * @param temp : the temperature value to be checked
+     * @return : is it an error. -999 indicates a problem communicating with sensor, 185 indicates value returned by sensor no good
+     */
+    static boolean isError(int temp) {
+        return (temp == 185 || temp == -999);
+    }
+
+    /**
      * updates the zone's temperature data hashmap with fresh sensor readings
-     * @param primary : the zone's primary temperature sensor object
-     * @param secondary : the zone's secondary sensor object
-     * @param temps : the zone's hashmap of temperature values
+     *
+     * @param primary      : the zone's primary temperature sensor object
+     * @param secondary    : the zone's secondary sensor object
+     * @param temps        : the zone's hashmap of temperature values
      * @param hasSecondary : did the system find a secondary sensor during zone initialization
-     * @throws Exception : inactive sensor exception. Sensor will read -999 in this case.
      */
     static void getSensorData(TempSensor primary, TempSensor secondary,
                               HashMap<Zone.Temps, Integer> temps,
-                              boolean hasSecondary) throws Exception{
+                              boolean hasSecondary) {
 
-        temps.replace(Zone.Temps.CURRENT_PRIMARY_TEMP, (int)primary.getTemp());
+        temps.replace(Zone.Temps.CURRENT_PRIMARY_TEMP, (int) primary.getTemp());
 
         if (hasSecondary) {
-            temps.replace(Zone.Temps.CURRENT_SECONDARY_TEMP, (int)secondary.getTemp());
+            temps.replace(Zone.Temps.CURRENT_SECONDARY_TEMP, (int) secondary.getTemp());
         }
-        temps.replace (Zone.Temps.PROCESS_TEMP, temps.get(Zone.Temps.CURRENT_PRIMARY_TEMP));
-        
-        if (temps.get(Zone.Temps.CURRENT_PRIMARY_TEMP) == -999 && hasSecondary) {
-                temps.replace (Zone.Temps.PROCESS_TEMP, temps.get(Zone.Temps.CURRENT_SECONDARY_TEMP));
+        temps.replace(Zone.Temps.PROCESS_TEMP, temps.get(Zone.Temps.CURRENT_PRIMARY_TEMP));
+
+        if (isError(temps.get(Zone.Temps.PROCESS_TEMP))) {
+            //text or email or alert of sensor problem hand attempting to use alternate sensor here
+            if (temps.get(Zone.Temps.PROCESS_TEMP) == temps.get(Zone.Temps.CURRENT_PRIMARY_TEMP) && hasSecondary) {
+                temps.replace(Zone.Temps.PROCESS_TEMP, temps.get(Zone.Temps.CURRENT_SECONDARY_TEMP));
+            } else if (temps.get(Zone.Temps.PROCESS_TEMP) == temps.get(Zone.Temps.CURRENT_SECONDARY_TEMP)) {
+                temps.replace(Zone.Temps.PROCESS_TEMP, temps.get(Zone.Temps.CURRENT_PRIMARY_TEMP));
+            }
         }
+
     }
 
 
     /**
      * The process setpoint is the setpoint the system will use to calculates how many stages to request.
      * This method returns the appropriate value based on the mode and occupancy status
-     * @param mode : The Zone's mode - enum defined in Zone.java
-     * @param temps : the zone's hashmap of temperature values
+     *
+     * @param mode       : The Zone's mode - enum defined in Zone.java
+     * @param temps      : the zone's hashmap of temperature values
      * @param isOccupied : the zone's occupancy status
      * @return : the process setpoint for the cycle
      */
@@ -55,9 +72,10 @@ class ZoneUtils {
 
     /**
      * Calculates how many stages of cooling to request
-     * @param temps : the zone's hashmap of temperature values
-     * @param stageDelay : if zone not satisfied after running one stage for this many minutes, start second stage
-     * @param timeInState : how long has zone been running current number of stages
+     *
+     * @param temps                    : the zone's hashmap of temperature values
+     * @param stageDelay               : if zone not satisfied after running one stage for this many minutes, start second stage
+     * @param timeInState              : how long has zone been running current number of stages
      * @param numExistingCoolingStages : how many cooling stages are already running
      * @return : how many cooling stages the zone should request
      */
@@ -66,15 +84,14 @@ class ZoneUtils {
         int setPoint = temps.get(Zone.Temps.PROCESS_SP);
         int temperature = temps.get(Zone.Temps.PROCESS_TEMP);
 
-        if (temperature - setPoint >= temps.get(Zone.Temps.FIRST_STAGE_DIFF)){
+        if (temperature - setPoint >= temps.get(Zone.Temps.FIRST_STAGE_DIFF)) {
             stages += 1;
             if (temperature - setPoint >= temps.get(Zone.Temps.SECOND_STAGE_DIFF)
-                    || minutesElapsed(timeInState) >= stageDelay 
-                    || numExistingCoolingStages == 2){
+                    || minutesElapsed(timeInState) >= stageDelay
+                    || numExistingCoolingStages == 2) {
                 stages += 1;
             }
-        }
-        else if(temperature - setPoint > 0 && numExistingCoolingStages > 0){
+        } else if (temperature - setPoint > 0 && numExistingCoolingStages > 0) {
             stages = numExistingCoolingStages;
         }
         return stages;
@@ -82,9 +99,10 @@ class ZoneUtils {
 
     /**
      * Calculates how many stages of heating to request
-     * @param temps : the zone's hashmap of temperature values
-     * @param stageDelay : if zone not satisfied after running one stage for this many minutes, start second stage
-     * @param timeInState : how long has zone been running current number of stages
+     *
+     * @param temps                    : the zone's hashmap of temperature values
+     * @param stageDelay               : if zone not satisfied after running one stage for this many minutes, start second stage
+     * @param timeInState              : how long has zone been running current number of stages
      * @param numExistingHeatingStages : how many heating stages are already running
      * @return : how many heating stages the zone should request
      */
@@ -93,15 +111,14 @@ class ZoneUtils {
         int setPoint = temps.get(Zone.Temps.PROCESS_SP);
         int temperature = temps.get(Zone.Temps.PROCESS_TEMP);
 
-        if (setPoint - temperature >= temps.get(Zone.Temps.FIRST_STAGE_DIFF)){
+        if (setPoint - temperature >= temps.get(Zone.Temps.FIRST_STAGE_DIFF)) {
             stages += 1;
             if (setPoint - temperature >= temps.get(Zone.Temps.SECOND_STAGE_DIFF)
-                    || minutesElapsed(timeInState) >= stageDelay 
-                    || numExistingHeatingStages == 2 ){
+                    || minutesElapsed(timeInState) >= stageDelay
+                    || numExistingHeatingStages == 2) {
                 stages += 1;
             }
-        }
-        else if(setPoint - temperature > 0 && numExistingHeatingStages > 0){
+        } else if (setPoint - temperature > 0 && numExistingHeatingStages > 0) {
             stages = numExistingHeatingStages;
         }
         return stages;
@@ -109,6 +126,7 @@ class ZoneUtils {
 
     /**
      * helper to convert milliseconds elapsed to minutes
+     *
      * @param startTime : time in milliseconds since epoch
      * @return : number of minutes elapsed from startTime until current time
      */

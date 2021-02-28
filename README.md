@@ -6,8 +6,11 @@ A Raspberry Pi based multi-stage, multi-zone HVAC controller. Replace thermostat
 two stages heat, two stages cooling, and three zones. User interface is currently via web browser (HTML pages and a
 RESTful interface with the back end), but an accompanying Android App is on the todo list. While the system was designed
 around a forced air zoned system, it should work fine for zoned hydronic systems by simply using the relays to control
-zone valves or pumps instead of the zone dampers. It will work as well for single stage, single zone systems if you
-simply play and learn instead of using an off-the-shelf thermostat.
+zone valves or pumps instead of the zone dampers. It will work as well for single stage, single zone systems if you just
+wish to play and learn instead of using an off-the-shelf thermostat.  
+<img src="/images/misc/V2_inside.jpg" alt="OpenHVACController" width="400" />
+<img src="/images/misc/V2_touchscreen.png" alt="Touchscreen" width="520" />
+
 
 ## Purpose/Motivation:
 
